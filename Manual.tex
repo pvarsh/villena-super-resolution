@@ -1,0 +1,297 @@
+%    SuperResolution: SuperResolution evaluation software
+%    Copyright (C) 2011  S. Villena, M. Vega, D. Babacan, J. Mateos, 
+%                               R. Molina and  A. K. Katsaggelos
+%
+%    If you use this software to evaluate any of the methods, please cite 
+%    the corresponding papers (see manual).
+%
+%    This program is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    This program is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage[breaklinks=true,hyperindex]{hyperref}
+\usepackage{graphicx}
+
+\hypersetup{  
+  pdftitle={Superresolution software manual},
+  pdfauthor={S. Villena, M. Vega, D. Babacan, J. Mateos, R. Molina and  A. K. Katsaggelos}
+} 
+
+\newcommand{\bn}{{\bf n}}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bs}{{\bf s}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bC}{{\bf C}}
+\newcommand{\bH}{{\bf H}}
+\newcommand{\bA}{{\bf A}}
+
+\newcommand{\figureimage}[4]{%
+\begin{figure}[t]%
+\begin{center}%
+\includegraphics[#2]{images/#1}%
+\caption{#4}%
+\label{#3}%
+\end{center}%
+\end{figure}%
+} % \newcommand{figureimage}
+
+
+\usepackage{color}
+\usepackage{soul}
+\setstcolor{red}
+%\newcommand{\new}[1]{\textcolor{blue}{#1}}
+%\newcommand{\delete}[1]{\st{#1}} 
+\newcommand{\new}[1]{#1} % uncomment for final version
+\newcommand{\delete}[1]{} % uncomment for final version
+\newcommand{\HL}[1]{\textcolor{magenta}{#1}}
+\newcommand{\change}[2]{\delete{#1}\new{#2}}
+
+
+
+
+
+\title{Superresolution software manual}
+\author{S. Villena, M. Vega, D. Babacan, J. Mateos \\ R. Molina and  A. K. Katsaggelos}
+
+\date{Version 1.0\\[4mm]
+Contact information:\\
+\new{Rafael Molina \\
+Departamento de Ciencias de la Computaci\'on e I. A.\\
+E.T.S. de Ingenier\'{\i}a Inform\'atica y de Telecomunicaci\'on\\
+Universidad de Granada\\
+18071 Granada (Spain)\\
+e-mail: rms@decsai.ugr.es}
+}
+
+\begin{document}
+
+\maketitle
+
+%-------------------------------------------------------------------
+%\section{Introduction}
+%-------------------------------------------------------------------
+This manual describes the use of the software application implementing the SR algorithms developed in \cite{VillenaThesis:11,Villena:09,Villena:11,VillenaIcip:10} as well as other superresolution methods developed by the authors \cite{Babacan:2011}. The application has been developed in MATLAB\textregistered{} (ver. 7.9/R2009b) including the graphic user interface (see figure~\ref{fig:ap01p0}).
+
+The developed software:
+\begin{itemize}
+\item Allows the execution of SR methods in real and simulate modes. 
+\item Evaluates the following SR methods:
+\begin{itemize}
+	\item	Bicubic interpolation.
+	\item	The TV prior based method proposed in \cite{Babacan:2011}.
+	\item	The method described in the algorithm 3.1 of \cite{VillenaThesis:11} which utilizes a SAR prior model.
+	\item	The algorithm proposed in \cite{Villena:09}, with the $\ell 1$-norm of the horizontal and vertical gradients as the image prior model.
+	\item	The method proposed in \cite{Villena:11} based on a SAR and $\ell 1$-norm model combination with  registration parameter estimation.
+	\item	The method described in the work \cite{VillenaIcip:10} which combines SAR and TV prior models with the estimation of the registration parameters.
+\end{itemize}
+If you use this software to evaluate any of the described methods, please cite the corresponding papers. The papers can be downloaded for research purposed from \url{http://decsai.ugr.es/vip}.
+
+\item	Saves the results (HR images and registration parameters).
+\item	Allows the user to stop the execution at any time, with the possibility of saving all the estimated parameters as well as the estimated HR image.  
+\end{itemize}
+
+We assume here that a digital camera captures a sequence of $L$ low resolution images of size N pixels. In the spatial domain, the process to capture the $k$-th image, $\by_k$, can be expressed using matrix-vector notation, as 
+\begin{equation}
+\by_{k} = \bA \bH_{k} \bC(\bs_{k}) \bx + \bn_{k},\label{eq:sys}
+\end{equation}
+where  $\bx$ represents a digitalization of the real scene with a resolution of $PN$ pixels, with $P>1$ representing the magnification factor, $\bC(\bs_{k})$ is a $PN \times PN$ matrix representing the motion of the $k$-th image in the sequence with respect to the reference image, with $\bs_k=(\theta_k,c_k,d_k)^T$ the motion parameters (rotation angle and horizontal and vertical displacement), $\bH_k$ is a $PN \times PN$ matrix representing the blur, $\bA$ is the $N \times PN$ integration and subsampling matrix and $\bn_k$ represents the noise. This model is used in the software to simulate the low resolution observed images.
+
+The simulated mode allows to evaluate the quality of the resulting HR images and the error in the estimated parameters for each method (see the experiment sections in chapters 4--6 of \cite{VillenaThesis:11}). In contrast the real mode execution allows to run the methods with real datasets. This mode has been utilized in the real experiments in chapter 6 of \cite{VillenaThesis:11}.
+ 
+Depending on the selected mode, and before running the selected method, the user has to provide the information required by the method. Additionally, if the simulated mode is selected, the user has to introduce the necessary information to generate the observed low resolution image set according to Eq.~\eqref{eq:sys}, that is, the original HR image, the number of observation to generate, the blur, the additive Gaussian noise variance and the subsampling factor. In real mode, the user has to provide the LR image set, the assumed, or previously estimated, blur and the desired upsampling factor. 
+
+Once the initial information has been filled in, the user has to choose the SR method and run it. Note that, when selecting any of the proposed methods that use model combination, it is also necessary to introduce the combination parameter ($\lambda$) in the range $[0,1]$. 
+
+The user can intuitively navigate through the GUI and complete the initial information needed by the SR method. Also, the user can access the reconstructed HR image and registration parameters on each iteration, in case they were estimated.
+  
+The access and workflow through the developed GUI is detailed next.
+
+\section{Installation}
+
+The application does not need to be installed. To access the application just uncompress the provided package. The application was developed in MATLAB\textregistered{} version 7.9.0.529 (R2009b) and it has been tested to work only in this version.
+
+\section{User interaction with the application}
+
+The main steps to run the application are:
+\begin{enumerate}
+	\item Start the application.
+	\item Select the (\textbf{Real} or \textbf{Simulated}).
+	\item Fill in the initial information.
+	\item Select the SR method to execute.
+	\item Execution monitoring and saving options. 
+\end{enumerate}
+Let us describe each step in details.
+
+\subsection{Running the application}
+
+To run the MATLAB\textregistered{} application, change your current directory to the application folder and run the program \textit{\textbf{SuperResolutionv1.m}}. In a few seconds the GUI depicted in figure~\ref{fig:ap01p0} will appear.
+
+The GUI is divided in the following interactive areas:
+\begin{enumerate}
+	\item \change{\textbf{Mode}}{\textbf{Mode/Reset}}: Allows the user to select between \textit{simulated} or \textit{real} execution mode \new{and to reset the program}.
+	\item \textbf{Low Resolution Image}: this area shows the utilized simulated or real observations depending on the current execution mode.
+	\item \textbf{High Resolution Image (Simulated Mode)}: Used only in simulated mode. It is utilized to load and previsualize the HR image from which the LR observations will be generated. 
+	\item \textbf{LR Generator}: (Only active in simulated mode). This panel allows to introduce the required information to generate LR observations from the image loaded in the previous area. 
+	\item \textbf{Super Resolution}: Allows to select the SR method to be applied to the LR observations. 
+	\item \textbf{High Resolution Image}: This area displays the resulting HR image on each iteration. The reconstruction process can so be monitored.
+	\item \textbf{Results}: In  simulated mode, this area shows error measures of the HR reconstruction and the value of the real and estimated parameters (if applicable). In real mode, it shows the estimated registration parameters. 		
+\end{enumerate}
+The only GUI element active at the beginning is the area \textbf{Mode}. The user must then select one of the two available execution modes: real or simulated.
+
+\figureimage{p00}{width=1.0\textwidth}{fig:ap01p0}%
+ {GUI appearance. Numbers 1 to 7 inside the red circles indicate the interface interaction areas.}
+
+\subsection{Execution Mode}
+
+The execution mode can be selected by clicking on the \change{\textbf{MODE}}{\textbf{MODE/RESET}}  pull-down menu (see figure ~\ref{fig:ap01p1}). Note that the \textbf{Real} mode is chosen by default.
+
+\figureimage{p1}{width=1.0\textwidth}{fig:ap01p1}%
+ {GUI appearance when the area \change{\textbf{Mode}}{\textbf{MODE/RESET}} is active.}
+
+Depending on the selected mode, the GUI activates the fields where to provide the information needed to run the selected SR method.
+
+Each execution mode is described in a separate section since the selected mode determines the application workflow.
+
+
+\new{Selecting the execution mode at any time involves resetting the application to the selected mode. All the loaded images and obtained results will be lost and all the parameters will be reset to their default values.}
+
+
+\subsubsection{Simulated Mode}
+
+When the simulated mode is selected, the \textbf{Open} button, in the area \textbf{High Resolution Image (Simulated Mode)}, is activated (see figure~\ref{fig:ap01s1}).
+
+\figureimage{s1}{width=1.0\textwidth}{fig:ap01s1}%
+ {GUI appearance when the area \textbf{Mode} is activated to \textbf{Simulated}. Note that the button \textbf{Open} is now active.}
+
+\figureimage{s2}{width=1.0\textwidth}{fig:ap01s2}%
+ {GUI appearance after clicking the \textbf{Open} button.}
+ 
+When the \textbf{Open} button is pressed, the file manager is launched, this allows to select the HR image to be used in the experiments, see figure~\ref{fig:ap01s2}. For instance, if we select the image \textit{lenag80.png}, the image is displayed and the  \textbf{LR Generator} panel becomes  available  (see figure~\ref{fig:ap01s3}). This panel shows all the required information needed to generate the LR images using Eq.~\eqref{eq:sys}. 
+
+\figureimage{s3}{width=1.0\textwidth}{fig:ap01s3}%
+ {GUI appearance after the initial HR image is loaded.}
+
+All fields have been initialized to default values that can be modified at any time. The blurring function is defined by the selected kernel, as shown in figure~\ref{fig:ap01s4}. Note that, for each type of blur, the values of the blur matrix coefficients are requested by the application. They are initialized with a default value in order to facilitate the user input.
+
+\figureimage{s4}{width=0.75\textwidth}{fig:ap01s4}%
+ {Blur kernel selection.}
+
+When the \textbf{Customized} option for the blur is selected, a new window is displayed in order to introduce the blur coefficients, see figure~\ref{fig:ap01s5}. Additionally one can select either the \textbf{Save} option to save the current kernel or \textbf{Load} to load a new one.
+ 
+\figureimage{s5}{width=0.5\textwidth}{fig:ap01s5}%
+ {This matrix allows the user to define the blur kernel in the \textbf{Customized} mode.} 
+
+The registration parameters can be defined in three forms: \textbf{Warp (Random)}, \textbf{Customized} and \textbf{Example}, depending on whether you want to  generate them randomly, introduce the parameter manually (rotation angle and vertical and horizontal displacements) for each observation or using the parameters in the experiments described in chapters~4--6 of \cite{VillenaThesis:11}, respectively (see figure~\ref{fig:ap01s6}).
+
+\figureimage{s6}{width=0.75\textwidth}{fig:ap01s6}%
+ {Setting the warp} 
+ 
+Finally, the user must set the zero-mean Gaussian noise level, which can be defined in two forms: introducing the noise variance or by setting the signal-to-noise ratio (SNR), both in exclusive buttons. Depending on the selected option, the numeric field allows to introduce either the noise variance or the SNR value. The SNR mode is active by default with a value of \textbf{30} dB.
+ 
+The \textbf{LR} button is available once all the required information to generate the observations has been provided (see figure~\ref{fig:ap01s7}). Notice how the areas \textbf{Low Resolution Image} and  \textbf{Super Resolution} have been activated. Now the \textbf{Low Resolution Image} area allows to save the generated observations. The observations are saved by typing a generic name in the file manager window. For instance, if the user generated 5 observations and set the generic name \textit{lenag.png}, then the application creates the image files \textit{lenag\_1.png, lenag\_2.png, lenag\_3.png, lenag\_4.png} y \textit{lenag\_5.png}.
+
+\figureimage{s7}{width=\textwidth}{fig:ap01s7}%
+ {Observations generation}
+ 
+Now we can apply the SR methods  implemented in the software to the generated observations. Notice that \textbf{Reference image}, \textbf{Registration parameters} and \textbf{SR Methods} are the only areas enabled in simulated mode. The subarea  \textbf{Registration parameters} allows the user to choose between using the true registration parameters or estimate them. True registration parameters are used by default.
+ 
+The next step consists of selecting the desired SR method to execute as shown in figure~\ref{fig:ap01s8}.
+
+\figureimage{s8nw}{width=0.75\textwidth}{fig:ap01s8}%
+ {Available SR methods.} 
+
+At this point, there are 5 active areas: \textbf{Low Resolution Image}, \textbf{Mode}, \textbf{High Resolution Image (Simulated Mode)}, \textbf{LR Generator} and \textbf{Super Resolution}. That means that you can modify the fields of any of these areas, and generate new observations, with the possibility of saving the previous ones.
+
+\figureimage{s9}{width=\textwidth}{fig:ap01s9}%
+ {Running the SR method.} 
+
+The selected SR method is executed by pressing the \textbf{SR} button. The areas \textbf{High Resolution Image} and \textbf{Results} are now enabled, as displayed in figure~\ref{fig:ap01s9}. On each iteration the HR reconstruction and its  quality metrics are displayed. The execution can be stopped at any time by pressing the \textbf{Cancel} button. When the method stops, due to convergence or cancellation, the application shows the true registration parameters and, if applicable, the estimated ones (see figure~\ref{fig:ap01s10}).
+ 
+\figureimage{s10}{width=\textwidth}{fig:ap01s10}%
+ {Execution of the SR method finalized.} 
+ 
+Additionally the application allows the user to display the best reconstruction in the PSNR sense, by pressing the \textbf{Best Results} button, that could not coincide with the solution obtained in the last iteration, as seen in figure~\ref{fig:ap01s11}. If the button is pressed again, the HR reconstruction in the last iteration is shown. Both reconstructions can be saved pressing the \textbf{Save} button. 
+
+\figureimage{s11}{width=\textwidth}{fig:ap01s11}%
+ {Display the best HR reconstruction.} 
+ 
+In order to request the file name to save the HR reconstruction, the file manager is launched. Let us point out that the application saves the HR reconstruction in the last iteration with the given name, the best reconstruction in the PSNR sense with the same name but ending in \emph{Best} and it also saves a file with the same name but ending in -Dat.mat containing the estimated parameters in a data structure named \textit{outopt} (see figure~\ref{fig:ap01dat01}). 
+ 
+ \figureimage{dat01}{width=0.75\textwidth}{fig:ap01dat01}%
+ {Stored parameter in the structure \textit{outopt} when saving the estimated HR image using the method in  \cite{Villena:09}.}
+
+\figureimage{s12}{width=0.75\textwidth}{fig:ap01s12}%
+ {Coefficient value for the prior model combination when method in \cite{Villena:11} or \cite{VillenaIcip:10} is selected.}
+  
+When any SR method using prior model combination  is selected, the combination coefficient, $\lambda$, is shown  as depicted in figure ~\ref{fig:ap01s12}. The combination coefficient, in the range $0$ to $1$, is displayed on a new field. The default value $0$, means that the algorithm is exclusively applying the SAR prior model.
+
+\subsubsection{Real Mode}
+
+The \textbf{Number of Observations} panel and \textbf{Open} button are activated on Real mode (see figure~\ref{fig:ap01r01}).
+
+\figureimage{r01}{width=0.75\textwidth}{fig:ap01r01}%
+ {\textbf{Real Mode}.}
+ 
+When pressing the \textbf{Open} button, the file manager is launched requesting for the first observed image file name. The rest of options (\textbf{Show Images} and \textbf{End}) are available once the first observation is introduced. Adding new observations is as simple as repeating the procedure until the last observation is opened and the \textbf{End}  button is pressed.
+ \new{The user can also load all the observed images at once by selecting a .mat file containing a single variable of size (rows $\times$ columns $\times$ n. observations) that stores all the images. }
+
+ 
+The \textbf{show images} button displays the set of images currently loaded.
+ 
+When the \textbf{End} button is pressed, the \textbf{Super Resolution} panel is activated, allowing the user to set the magnification factor (set to $2$ in each direction by default), and the blurring kernel (without blurring, by default) in the \textbf{Deconvolution} subpanel.
+
+\figureimage{r02}{width=0.75\textwidth}{fig:ap01r02}%
+ {Execution of the method in \cite{Villena:11}  in \textbf{Real} mode with $\lambda=0.7$.}
+ 
+As for the simulated mode, the user selects the SR method and presses the \textbf{SR} button to run it. The appearance of the panels \textbf{High Resolution Image} and \textbf{Results} are shown in figure~\ref{fig:ap01r02}. Once the method has finished, the registration parameters are shown and the results can be saved by pressing the \textbf{Save} button, see figure~\ref{fig:ap01r03}.
+ 
+\figureimage{r03}{width=0.75\textwidth}{fig:ap01r03}%
+ {End of execution of method in \cite{Villena:11} in \textbf{Real} Mode with $\lambda=0.7$ at iteration $19$.}
+
+\section{Files output during the execution}
+
+The application displays the execution status in the GUI but it also saves \textit{log} files in the directory \textbf{tempSR} which contains the information of all the parameters estimated in each iteration. An example of the content of this file, for the real mode execution depicted in figure~\ref{fig:ap01r03}, is shown in figure~\ref{fig:ap01log01}.
+
+\figureimage{log01}{width=0.75\textwidth}{fig:ap01log01}%
+ {Content of the log file after running the method in \cite{Villena:11} in real mode with $\lambda=0.7$ in iteration $2$.}
+
+\section*{Acknowledgments}
+
+We want to thanks to Miguel Tall\'on, Ph.D. student at University of Granada, and Leonidas Spinoulas and Michail Iliadis, Ph.D. students at Northwestern University,  for testing the software. This work has been supported by the Comisi\'on Nacional de Ciencia y Tecnolog\'{\i}a under contract TIC2010-15137.
+
+\section*{Note}
+
+Please report bugs to Rafael Molina (rms@decsai.ugr.es).
+
+\section*{License}
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see $<$\url{http://www.gnu.org/licenses/}$>$.
+
+\bibliographystyle{unsrt}
+\bibliography{Manual}
+
+\end{document}
