@@ -248,10 +248,10 @@ function pushbutton_OLRI_Callback(hObject, eventdata, handles)
     %n_ob = round(abs(str2num(n_ob)));
     n_ob = handles.n_ob;
     
-    set(handles.LR_counter,'String',num2str(n_ob));
+    set(handles.LR_counter, 'String', num2str(n_ob));
     
 %     set(handles.pushbutton_LRG,'Enable','Off');
-%      set(handles.pushbutton_LRG,'Visible','Off');
+%     set(handles.pushbutton_LRG,'Visible','Off');
     
     if n_ob == 0 
         n_ob =1;
@@ -345,7 +345,7 @@ if index == 1
             set(handles.text_Mlr,'String',handles.opt.m);
             set(handles.text_Nlr,'String',handles.opt.n);
             set(handles.LR_counter,'String',i); 
-        imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
+            imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
             imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
 
             % Normalice HRi
@@ -654,6 +654,8 @@ else % Real mode
      handles.opt.sx = zeros(1, handles.opt.L);
      handles.opt.sy = zeros(1, handles.opt.L);
      yvecs = handles.yvecs;
+     
+     
      
      for kk = 2: handles.opt.L
          [newsk, Lambdak, yhatk] = LKvar(yvecs{1}, kk,yvecs{kk},0,1,1,zeros(3), 1, handles.opt);
