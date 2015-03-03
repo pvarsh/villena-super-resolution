@@ -25,6 +25,9 @@ N = opt.N;
 M = opt.M;
 nopix = opt.N*opt.M;
 
+disp('size(y)');
+disp(size(y));
+
 [ys] = unwrapLR(y,opt);
 x = imresize(ys{1}, opt.res, 'bicubic');
 x=x(:);
