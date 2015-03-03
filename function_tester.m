@@ -1,11 +1,11 @@
 % ------------------------------------------------
-% Testing bicubic
+% Testing BicubicSR.m
 
-n_channels = 1 % use 1 to only keep first channel or 3 to keep all 3 in RGB
+n_channels = 3 % use 1 to only keep first channel or 3 to keep all 3 in RGB
 
 im_file = '/Users/petervarshavsky/Dropbox//NYU/superresolution/data/meklit/meklit.png';
 img = imread(im_file, 'png');
-img = img(:,:,n_channels); % only keep one channel
+img = img(:,:,1:n_channels); % only keep one channel
 imshow(img);
 
 disp('Image size: ');
@@ -21,6 +21,9 @@ options.m = W;
 options.N = options.n * SR_factor;
 options.M = options.m * SR_factor;
 options.Real = true;
+
+disp('Size of img before BicubicSR: ');
+disp(size(img));
 
 x = BicubicSR(img, options);
 disp('x image size: ');
