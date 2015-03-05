@@ -18,6 +18,31 @@
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+%----------
+% Parameters: (defaults used in this package in [])
+%               x:  first image (all registration done to first image)
+%               k:  frame number in loaded sequence
+%               yk: kth image
+%               Sigma: don't know [0]
+%               A: don't know [1]
+%               H: don't know [1]
+%               Lambdapk: 3x3 matrix [zeros(3)]
+%               betak: don't know [1]
+%               opt: options object
+%                   - opt.N: super-resolved dimension 1
+%                   - opt.M: super-resolved dimenison 2
+%                   - theta
+%                   - opt.sx
+%                   - opt.sy
+%                   - opt.theta_init
+%                   - opt.sx_init
+%                   - opt.sy_init
+%                   - opt.LK_maxit: max iterations
+%                   - opt.debug: 
+%                   - opt.LK_thr: threshold?
+%                   - opt.method: [variational]
+% Calls:
+%               warp_matrix_bilinear()
 function [newsk, Lambdak,varargout] = LKvar(x, k, yk, Sigma, A,H, Lambdapk, betak, opt)
                                       
 nopix = opt.N*opt.M;
