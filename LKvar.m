@@ -43,6 +43,8 @@
 %                   - opt.method: [variational]
 % Calls:
 %               warp_matrix_bilinear()
+% Notes: on first run opt.theta_init, opt.theta, opt.sx_init, opt_sx, opt.sy_init, opt.sy
+%        are all [0,0].
 function [newsk, Lambdak,varargout] = LKvar(x, k, yk, Sigma, A,H, Lambdapk, betak, opt)
                                       
 nopix = opt.N*opt.M;

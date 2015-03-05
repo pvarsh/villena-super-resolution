@@ -11,7 +11,7 @@ imshow(img);
 disp('Image size: ');
 disp(size(img));
 
-SR_factor = 2 % magnification
+% SR_factor = 2 % magnification
 [H, W] = size(img); % Height and Width
 
 options.L = 1;
@@ -22,6 +22,4 @@ options.N = options.n * SR_factor;
 options.M = options.m * SR_factor;
 options.Real = true;
 
-disp('Size of img before BicubicSR: ');
-disp(size(img));
 
