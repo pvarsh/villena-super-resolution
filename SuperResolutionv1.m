@@ -524,7 +524,7 @@ else % Real mode
     set(handles.popupmenu_SRmet,'Enable','On');
     set(handles.popupmenu_registered,'Enable','Off');
     set(handles.popupmenu_Blur_HR,'Enable','On');
-     set(handles.popupmenu_Blur_HR,'Visible','On');
+    set(handles.popupmenu_Blur_HR,'Visible','On');
     handles.opt.res = 2; % initial factor value
     set(handles.edit_MFSR,'String',num2str(handles.opt.res));
     set(handles.edit_MFSR,'Enable','On');
@@ -597,10 +597,10 @@ handles.opt.interv_ShowImages = 1; % Show images each opt.interv_ShowImages iter
  handles.opt.FixedBeta = 0;        
 %----------------
 
- set(handles.text_Runing,'Visible','Off');
- set(handles.text_Runing,'Enable','Off');
- set(handles.opt.ref_cancel,'Value',0);
- set(handles.pushbutton_saveSR,'Visible','off');
+set(handles.text_Runing,'Visible','Off');
+set(handles.text_Runing,'Enable','Off');
+set(handles.opt.ref_cancel,'Value',0);
+set(handles.pushbutton_saveSR,'Visible','off');
 set(handles.pushbutton_saveSR,'Enable','off');
 
         set(handles.pushbutton_BestResults,'Visible','off');
@@ -636,7 +636,7 @@ else % Real mode
      %% Registraion
      
      set(handles.popupmenu_registered,'Visible','Off');
-    set(handles.popupmenu_registered,'Enable','Off');
+     set(handles.popupmenu_registered,'Enable','Off');
      set(handles.pushbutton_LRG,'Enable','Off');
      handles.opt.M =  handles.opt.m;
      
