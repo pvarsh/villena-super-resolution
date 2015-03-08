@@ -46,7 +46,8 @@
 % Notes: on first run opt.theta_init, opt.theta, opt.sx_init, opt_sx, opt.sy_init, opt.sy
 %        are all [0,0].
 function [newsk, Lambdak,varargout] = LKvar(x, k, yk, Sigma, A,H, Lambdapk, betak, opt)
-                                      
+                            
+disp('Starting LKvar');
 nopix = opt.N*opt.M;
 N = opt.N;
 M = opt.M;
@@ -78,7 +79,13 @@ for i=1:opt.LK_maxit,
     
     [C,Lbl,Lbr,Ltl,Ltr,a,b]  = warp_matrix_bilinear(dx,dy,thetak,M,N);
 
-    
+%     disp(A);
+%     disp(H);
+%     disp(C);
+%     disp(size(A));
+%     disp(size(H));
+%     disp(size(C));
+%     disp(size(x));
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
      ccc_varargout = A*H*C*x;
      if i==1
@@ -183,10 +190,10 @@ for i=1:opt.LK_maxit,
     
     sk = newsk;      
     clear O;
-    opt.cancel = get(opt.ref_cancel,'Value');
-     if opt.cancel,
-        break;
-    end
+%     opt.cancel = get(opt.ref_cancel,'Value');
+%      if opt.cancel,
+%         break;
+%     end
 end
 
 newsk = sk_min;
