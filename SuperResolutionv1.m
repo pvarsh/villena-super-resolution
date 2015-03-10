@@ -138,8 +138,8 @@ if index == 1
     data = get(handles.uitable_warp,'Data');
     set(handles.uitable_warp,'ColumnEditable',logical(zeros(1,length(data))));
     handle.opt.menu_warp = 1;
-      set(handles.text_NLR,'Enable','On');
-     set(handles.edit_NLR,'Enable','On');
+    set(handles.text_NLR,'Enable','On');
+    set(handles.edit_NLR,'Enable','On');
     set(handles.text_Magnification_Factor,'Enable','On');
     set(handles.edit_Magnification,'Enable','On');
     
@@ -152,25 +152,25 @@ if index == 1
     
     filter =2;
     set(handles.popupmenu_Blur,'Value',2);
-      set(handles.text_size_h,'Visible','On');
-        set(handles.edit_size_h,'Visible','On');
-        set(handles.text_varh,'Visible','Off');
-        set(handles.edit_varh,'Visible','Off');
-        set(handles.text_size_h,'String','Mask size (odd #):');
-        set(handles.edit_Noise,'String','30');
-         set(handles.edit_Noise,'Enable','on');
-         
-         set(handles.edit_NLR,'Enable','on');
-         set(handles.edit_Magnification,'Enable','on');
-         set(handles.edit_size_h,'String','3');
-         set(handles.edit_size_h,'Enable','on');
-         set(handles.popupmenu_Blur,'Enable','on');
-         set(handles.popupmenu_Warp,'Enable','on');
-         set(handles.radiobutton_var,'Enable','On');
-        set(handles.radiobutton_SNR,'Enable','On');    
-        handles.opt.SNR = 30;
-       
-        set(handles.pushbutton_LRG,'Enable','On');
+    set(handles.text_size_h,'Visible','On');
+    set(handles.edit_size_h,'Visible','On');
+    set(handles.text_varh,'Visible','Off');
+    set(handles.edit_varh,'Visible','Off');
+    set(handles.text_size_h,'String','Mask size (odd #):');
+    set(handles.edit_Noise,'String','30');
+    set(handles.edit_Noise,'Enable','on');
+     
+    set(handles.edit_NLR,'Enable','on');
+    set(handles.edit_Magnification,'Enable','on');
+    set(handles.edit_size_h,'String','3');
+    set(handles.edit_size_h,'Enable','on');
+    set(handles.popupmenu_Blur,'Enable','on');
+    set(handles.popupmenu_Warp,'Enable','on');
+    set(handles.radiobutton_var,'Enable','On');
+    set(handles.radiobutton_SNR,'Enable','On');    
+    handles.opt.SNR = 30;
+   
+    set(handles.pushbutton_LRG,'Enable','On');
   
 
 %%
@@ -184,13 +184,12 @@ if index == 1
         HRi = imread([n_route f_name]);
     end
     
-    
     %Restricci�n a im�genes en ESCALA DE GRISES
     if not(strcmp(colorT,'grayscale')) 
         HRi = rgb2gray(HRi);
     end
      
-   %--- Test if HRi is scuare
+   %--- Test if HRi is square
    [nf,nc]=size(HRi);
 
     if nf > nc 
@@ -205,9 +204,7 @@ if index == 1
         HRinw(ndf:ndf+nf-1,:)=HRi(:,:);
         HRi=HRinw;
         clear HRinw
-    end
-
-%--- End Test ---
+    end %--- End Test ---
 
     axes(handles.HRimage_SM);
     [handles.opt.M,handles.opt.N] = size(HRi);
@@ -266,39 +263,39 @@ function pushbutton_OLRI_Callback(hObject, eventdata, handles)
     end
  
 if index == 1
-     if  f_name(length(f_name)-3:length(f_name)) == '.mat'
-           mat_format = 1;
-           
-           [yk_img,f_name]=loadimage_mat(f_name,n_route);
-          
-           if size(yk_img,4) > 1 
-               mat_format =0;
-               index = 0;
-               err= errordlg('The file must contain a single variable of size (columns*row*n. observations) with all the observations')
-               %             'Error This file image format must be (rows*columns*n. observations)')
-              
-           end
-           
-     end
+    
+% % Handling of matlab files
+%      if  f_name(length(f_name)-3:length(f_name)) == '.mat'
+%            mat_format = 1;
+%            [yk_img,f_name]=loadimage_mat(f_name,n_route);
+%           
+%            if size(yk_img,4) > 1 
+%                mat_format =0;
+%                index = 0;
+%                err= errordlg('The file must contain a single variable of size (columns*row*n. observations) with all the observations')
+%                %             'Error This file image format must be (rows*columns*n. observations)')
+%            end
+%      end
+%     
     
     
-    
-    if handles.opt.Open_Real == 0 | mat_format
+    if  handles.opt.Open_Real == 0 | mat_format
         handles.opt.n_route = n_route;
         handles.opt.Open_Real = 1;
     end
     
-   if mat_format % file .mat
-       respuesta = 'No ';
-       if handles.opt.L >= 1
+    if mat_format % file .mat
+        disp('Only mat format')
+        respuesta = 'No ';
+        if handles.opt.L >= 1
            respuesta=questdlg('You will lose all the previously loaded observations',...
            'Choice', 'Yes', 'No ', 'No ');
-       end
-      if respuesta == 'Yes' | handles.opt.L == 0
-      % handles.opt.Open_Real = 1;
+        end
+        if respuesta == 'Yes' | handles.opt.L == 0
+        % handles.opt.Open_Real = 1;
         handles.opt.n_route = n_route;
-       [nf,nc,n_ob]= size(yk_img);
-       handles.opt.L=n_ob;
+        [nf,nc,n_ob]= size(yk_img);
+        handles.opt.L=n_ob;
        
         if nf > nc 
             ndf = floor((nf-nc)/2)+1;
@@ -313,11 +310,12 @@ if index == 1
             yk_img=HRinw;
             clear HRinw
         end
+        
         [handles.opt.m,handles.opt.n,handles.n_ob] = size(yk_img);
         y= [];
        
-       for k = 1: n_ob
-           yk=yk_img(:,:,k);
+        for k = 1: n_ob
+            yk=yk_img(:,:,k);
            
             yk= double(yk);
             yk= yk/(max(max(yk)));
@@ -348,31 +346,31 @@ if index == 1
             imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
             imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
 
-            % Normalice HRi
-        %    HRi = HRi / max(img(:));
+            % Normalize HRi
+            % HRi = HRi / max(img(:));
 
             handles.opt.y = y; 
 
            
-       end
-       handles.n_ob =n_ob+1;
+        end
+        handles.n_ob =n_ob+1;
         
-      else
-           warndlg('No image selected');
+        else
+            warndlg('No image selected');
         
         
-      end  % if handles.opt.L == 0 | respuesta == 'Yes' 
-   else
-    handles.opt.L=n_ob;
-    
-    imainfo = imfinfo([n_route f_name]);
-    colorT = imainfo(1,1).ColorType;
-    if strcmp(colorT,'indexed')
-        [yk,map] = imread([n_route f_name]);
-        yk = ind2rgb(yk,map);
+        end  % if handles.opt.L == 0 | respuesta == 'Yes' 
     else
-        yk = imread([n_route f_name]);
-    end
+        handles.opt.L=n_ob;
+        
+        imainfo = imfinfo([n_route f_name]);
+        colorT = imainfo(1,1).ColorType;
+        if strcmp(colorT,'indexed')
+            [yk,map] = imread([n_route f_name]);
+            yk = ind2rgb(yk,map);
+        else
+            yk = imread([n_route f_name]);
+        end
     
     
     %Restricci�n a im�genes en ESCALA DE GRISES
@@ -388,7 +386,7 @@ if index == 1
    % yk = padarray(yk, [max(0, size(yk,2)-size(yk,1))/2, max(0, size(yk,1)-size(yk,2))/2], 'replicate');
     
     
-     %--- Test if HRi is scuare
+     %--- Test if HRi is square
     [nf,nc]=size(yk);
 
     if nf > nc 
@@ -431,7 +429,7 @@ if index == 1
         
         
         
-        yvecs{k} =double( yk(:));
+        yvecs{k} =double( yk(:)); % urnoll image
         y = double([y; yk(:)]);
         
         handles.yvecs{k} = (yvecs{k});
@@ -463,7 +461,7 @@ if index == 1
     end
    
 
-end % end if mat_formatelse
+end % end if .mat format
 else
  warndlg('No image selected');
     
