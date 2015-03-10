@@ -1,6 +1,6 @@
 %% abre una imagen .mat o de otro tipo y si cancelas devuelve -1
 
-function [image,im_name]= loadimage_mat( filename,pathname)
+function [image,im_name]= loadimage_mat(filename,pathname)
 
     f_image = fullfile(pathname, filename);
 
