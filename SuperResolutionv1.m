@@ -462,9 +462,9 @@ if index == 1
    
 
 end % end if .mat format
+
 else
- warndlg('No image selected');
-    
+    warndlg('No image selected');    
 end
 
 if n_ob > 1
@@ -592,7 +592,7 @@ handles.opt.KeepHistory = 0;
 handles.opt.verbose = 1; 
 handles.opt.debug = 0;
 handles.opt.interv_ShowImages = 1; % Show images each opt.interv_ShowImages iterations
- handles.opt.FixedBeta = 0;        
+handles.opt.FixedBeta = 0;        
 %----------------
 
 set(handles.text_Runing,'Visible','Off');
@@ -601,10 +601,10 @@ set(handles.opt.ref_cancel,'Value',0);
 set(handles.pushbutton_saveSR,'Visible','off');
 set(handles.pushbutton_saveSR,'Enable','off');
 
-        set(handles.pushbutton_BestResults,'Visible','off');
-        set(handles.pushbutton_BestResults,'Enable','off');
+set(handles.pushbutton_BestResults,'Visible','off');
+set(handles.pushbutton_BestResults,'Enable','off');
 
-if mode == 2
+if mode == 2 % Simulation mode
     handles.opt.Real = 0;
     set(handles.popupmenu_registered,'Visible','On');
     set(handles.popupmenu_registered,'Enable','On');
@@ -631,36 +631,37 @@ if mode == 2
         handles.opt.InitWithAvgImg = 1;
     end
 else % Real mode
+
      %% Registraion
      
-     set(handles.popupmenu_registered,'Visible','Off');
-     set(handles.popupmenu_registered,'Enable','Off');
-     set(handles.pushbutton_LRG,'Enable','Off');
-     handles.opt.M =  handles.opt.m;
+    set(handles.popupmenu_registered,'Visible','Off');
+    set(handles.popupmenu_registered,'Enable','Off');
+    set(handles.pushbutton_LRG,'Enable','Off');
+    handles.opt.M =  handles.opt.m;
+
+    handles.opt.N =  handles.opt.n; % For the initial registration 
+
+    handles.opt.xtrue = [];
+    handles.opt.method ='variational';
+    handles.opt.Real = 1;
+
+    handles.opt.theta_init = zeros(1, handles.opt.L);
+    handles.opt.sx_init = zeros(1, handles.opt.L);
+    handles.opt.sy_init = zeros(1, handles.opt.L);
+
+    handles.opt.theta = zeros(1, handles.opt.L);
+    handles.opt.sx = zeros(1, handles.opt.L);
+    handles.opt.sy = zeros(1, handles.opt.L);
+    yvecs = handles.yvecs;
      
-     handles.opt.N =  handles.opt.n; % For the initial registration 
-    
-     handles.opt.xtrue = [];
-     handles.opt.method ='variational';
-     handles.opt.Real = 1;
-     
-     handles.opt.theta_init = zeros(1, handles.opt.L);
-     handles.opt.sx_init = zeros(1, handles.opt.L);
-     handles.opt.sy_init = zeros(1, handles.opt.L);
-     
-     handles.opt.theta = zeros(1, handles.opt.L);
-     handles.opt.sx = zeros(1, handles.opt.L);
-     handles.opt.sy = zeros(1, handles.opt.L);
-     yvecs = handles.yvecs;
      
      
-     
-     for kk = 2: handles.opt.L
-         [newsk, Lambdak, yhatk] = LKvar(yvecs{1}, kk,yvecs{kk},0,1,1,zeros(3), 1, handles.opt);
-         handles.opt.theta(kk) = newsk(1);
-         handles.opt.sx(kk) = handles.opt.res * newsk(2);
-         handles.opt.sy(kk) = handles.opt.res * newsk(3);
-     end
+    for kk = 2: handles.opt.L
+        [newsk, Lambdak, yhatk] = LKvar(yvecs{1}, kk,yvecs{kk},0,1,1,zeros(3), 1, handles.opt);
+        handles.opt.theta(kk) = newsk(1);
+        handles.opt.sx(kk) = handles.opt.res * newsk(2);
+        handles.opt.sy(kk) = handles.opt.res * newsk(3);
+    end
     
      handles.opt.theta_init = handles.opt.theta;
      handles.opt.sx_init = handles.opt.sx;
