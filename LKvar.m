@@ -47,8 +47,8 @@
 %        are all [0,0].
 % Returns: newsk = [theta, sx, sy]]
 function [newsk, Lambdak,varargout] = LKvar(x, k, yk, Sigma, A,H, Lambdapk, betak, opt)
-                            
-disp('Starting LKvar');
+                 
+
 nopix = opt.N*opt.M;
 N = opt.N;
 M = opt.M;
