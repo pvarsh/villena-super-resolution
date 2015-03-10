@@ -38,13 +38,15 @@ for k = 1:num_LR
 end
 
 y = []; % all lr_images as column vectors
+
 for k = 1:num_LR
     yk = double(images(:,:,k));
     % ys = yk/(max(max(yk))); % normalize
 
     yvecs{k} = yk(:);
     y = [y; yk(:)];
-
+    handles.y = y;
+    handles.opt.y = y;
 end
 
 handles.yvecs = yvecs;
@@ -222,4 +224,57 @@ switch o_blur
         
         h=handles.opt.h;
         save('h_deconvblind.mat','h');
-end
+end % end cases
+
+%% Skipping lines 770-813
+
+method = 1 % hardcodes solvex_var
+
+switch method
+    case 1 %% Bicubic
+        [handles.srimage.x,handles.srimage.out] = BicubicSR(handles.y,handles.opt);
+        
+    case 2 %% solvex_var    
+        FILE_log = fopen(sprintf('tempSR/LOG_VAR_TV_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        [handles.srimage.x,handles.srimage.out]= solvex_var(handles.y,handles.opt,handles.HRimage,handles);    
+               
+    case 3 %% solvex_varL4
+        FILE_log = fopen(sprintf('tempSR/LOG_VAR_L4_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        [handles.srimage.x,handles.srimage.out]= solvex_varL4(handles.y,handles.opt,handles.HRimage,handles); 
+       
+    case 4 %% solvex_varL4SAR
+        FILE_log = fopen(sprintf('tempSR/LOG_VAR_SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        handles.opt.lambda_prior = 0; % SAR prior is seleted; with value 1 the norm l1 prior is selected
+        [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
+
+    case 5 %% solvex_varL4SAR Combination            
+        FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+        set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+        %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
+        [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
+                  
+    case 6 %% solvex_varTVSAR Combination
+        FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+        set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+        %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
+        [handles.srimage.x,handles.srimage.out]= solvex_varTVSAR(handles.y,handles.opt,handles.HRimage,handles);   
+                        
+    case 7 %% RobustSR
+        FILE_log = fopen(sprintf('tempSR/LOG_RSR_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        [handles.srimage.x,handles.srimage.out]= RobustSR(handles.y,handles.opt,handles.HRimage,handles);
+       
+    case 8 %% Zomet           
+        FILE_log = fopen(sprintf('tempSR/LOG_Zomet_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
+        handles.opt.LogFile = FILE_log;
+        [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
+end % end switch
+
+
