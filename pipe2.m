@@ -116,6 +116,8 @@ handles.opt.DIVIDE_U = 0;
 handles.opt.FixedParameters = 0;
 %% end from LoadParametersSR.m
 
+handles.opt.lambda_prior = num2str(0.5) % weight for combination of priors
+
 % set(handles.text_Runing,'Visible','Off');
 % set(handles.text_Runing,'Enable','Off');
 % set(handles.opt.ref_cancel,'Value',0);
@@ -264,7 +266,7 @@ end % end cases
 
 %% Skipping lines 770-813
 
-method = 3 % hardcodes solvex_var
+method = 5 % hardcodes solvex_var
 
 handles.HRimage = axes();
 
@@ -291,16 +293,17 @@ switch method
     case 5 %% solvex_varL4SAR Combination            
         FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
         handles.opt.LogFile = FILE_log;
-        handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
-        set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+        % handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+
+        % set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
         %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
         [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
                   
     case 6 %% solvex_varTVSAR Combination
         FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
         handles.opt.LogFile = FILE_log;
-        handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
-        set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+        % handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+        % set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
         %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
         [handles.srimage.x,handles.srimage.out]= solvex_varTVSAR(handles.y,handles.opt,handles.HRimage,handles);   
                         
