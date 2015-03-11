@@ -216,8 +216,11 @@ maxPSNR_sx = opt.sx;
 maxPSNR_sy = opt.sy;
 maxPSNR_theta = opt.theta;
 
+disp('Overriding maxit in solvex_var.m')
+opt.maxit = 3;
 
 for i=1:opt.maxit,
+    disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...'])
     % opt.cancel = get(opt.ref_cancel,'Value');
     % if opt.cancel,
     %    break;
