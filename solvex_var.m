@@ -119,10 +119,10 @@ else
     x=x(:);
 end
 
-if opt.interv_ShowImages , 
-    axes(HRaxis), imshow(reshape(x,[opt.M,opt.N]));
+% if opt.interv_ShowImages , 
+%     axes(HRaxis), imshow(reshape(x,[opt.M,opt.N]));
     
-end
+% end
 
 
 %% Calculate initial hyperparameters
@@ -216,14 +216,14 @@ maxPSNR_theta = opt.theta;
 
 
 for i=1:opt.maxit,
-    opt.cancel = get(opt.ref_cancel,'Value');
-     if opt.cancel,
-        break;
-    end
+    % opt.cancel = get(opt.ref_cancel,'Value');
+    % if opt.cancel,
+    %    break;
+    % end
     fprintf(opt.LogFile,'\n-------------------------------------------------------------------\n');
     fprintf(opt.LogFile,'Iteration %d\n',i);
    % set(handles.edit_Niteration,'String',num2str(i));
-    set(handles.text_Number_iteration,'String',i); 
+    % set(handles.text_Number_iteration,'String',i); 
 
     oldx = x(:);
 
@@ -455,11 +455,11 @@ for i=1:opt.maxit,
     end
 %     pause
     
-    if opt.ShowImages, 
-        set(handles.text_Msr,'String',M);
-        set(handles.text_Nsr,'String',N);
+    if opt.ShowImages,
+        HRaxis = axes();
+        % set(handles.text_Msr,'String',M);
+        % set(handles.text_Nsr,'String',N);
         axes(HRaxis), imshow(reshape(x,[opt.M,opt.N]));
-  
     end
     
     if opt.KeepHistory,
@@ -475,10 +475,10 @@ for i=1:opt.maxit,
     if xconv < opt.thr,
         break;
     end
-    opt.cancel = get(opt.ref_cancel,'Value');
-     if opt.cancel,
-        break;
-    end
+    % opt.cancel = get(opt.ref_cancel,'Value');
+    % if opt.cancel,
+    %     break;
+    % end
 end
 
 out.betak = betak;
