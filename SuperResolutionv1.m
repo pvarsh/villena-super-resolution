@@ -332,7 +332,7 @@ if index == 1
             handles.y = y;
             npix = handles.opt.n*handles.opt.m;
 
-             i=k;%handles.opt.L;
+            i=k;%handles.opt.L;
             aux = y((i-1)*npix+1:i*npix); 
 
             LRi(:,:,:,i) = reshape(aux,[handles.opt.m,handles.opt.n]);
@@ -654,7 +654,7 @@ else % Real mode
     handles.opt.sy = zeros(1, handles.opt.L);
     yvecs = handles.yvecs;
      
-     
+    
      
     for kk = 2: handles.opt.L
         [newsk, Lambdak, yhatk] = LKvar(yvecs{1}, kk,yvecs{kk},0,1,1,zeros(3), 1, handles.opt);
@@ -673,8 +673,8 @@ else % Real mode
      handles.opt.EstimateRegistration = 1;
      handles.opt.sigma =0.0;
      ADDREGNOISE = 0;
-    %% Blurring Matrix
 
+    %% Blurring Matrix
     o_blur = get(handles.popupmenu_Blur_HR,'Value') ;
 
     switch o_blur
@@ -735,7 +735,7 @@ else % Real mode
             h =h/(sum(sum(h)));
             handles.opt.h = h;
             
-         case 6
+        case 6
             size_h = get(handles.edit_size_h_HR,'String');
             size_h = uint8(str2num(size_h));
             if isempty(size_h)
@@ -749,11 +749,11 @@ else % Real mode
                     'modal');
                 set(handles.edit_size_h_HR,'String','3');
                 
-               [xx, handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
-               clear xx
+                [xx, handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
+                clear xx
             else
-              [xx,  handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
-              clear xx
+                [xx,  handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
+                clear xx
             end    
             h=handles.opt.h;
             save('h_deconvblind.mat','h');
@@ -763,158 +763,128 @@ else % Real mode
     set(handles.text_trwarp,'Enable','Off');
     set(handles.popupmenu_warpresults,'Enable','Off');
     set(handles.text_estwarp,'Enable','Off');
-        set(handles.uitable_estwarp,'Enable','Off');
-    
-    % End Real Mode
-end
+    set(handles.uitable_estwarp,'Enable','Off');
+      
+end % End Real Mode
+
     method = get(handles.popupmenu_SRmet,'Value');
     
     if mode == 2 % simulation
-     set(handles.text_mse,'Enable','On');
+        set(handles.text_mse,'Enable','On');
         set(handles.text_psnr,'Enable','On');
 
         set(handles.text_mse2,'Enable','On');
-         set(handles.text_psnr2,'Enable','On');
-       
+        set(handles.text_psnr2,'Enable','On');
     end  
        
     if method == 1
-         set(handles.text_Niteration, 'Enable','Off');
+        set(handles.text_Niteration, 'Enable','Off');
              
-             
-                handles.opt.cancel = 0;
-                set(handles.pushbutton_Cancel,'Enable','On');
-             set(handles.text_Number_iteration, 'Enable','Off');
-             set(handles.text_Number_iteration, 'Visible','Off');
-             set(handles.text_Niteration, 'Visible','Off');
-             set(handles.pushbutton_SRG,'Visible','on');
-             set(handles.pushbutton_LRG,'Enable','off');
-             set(handles.pushbutton_SRG,'Enable','off');
-             set(handles.pushbutton_saveSR,'Visible','off');
-             set(handles.pushbutton_saveSR,'Enable','off');
+        handles.opt.cancel = 0;
+        set(handles.pushbutton_Cancel,'Enable','On');
+        set(handles.text_Number_iteration, 'Enable','Off');
+        set(handles.text_Number_iteration, 'Visible','Off');
+        set(handles.text_Niteration, 'Visible','Off');
+        set(handles.pushbutton_SRG,'Visible','on');
+        set(handles.pushbutton_LRG,'Enable','off');
+        set(handles.pushbutton_SRG,'Enable','off');
+        set(handles.pushbutton_saveSR,'Visible','off');
+        set(handles.pushbutton_saveSR,'Enable','off');
     else
-         set(handles.text_Niteration, 'Enable','On');
-             set(handles.text_Number_iteration, 'Enable','On');
-             set(handles.text_Number_iteration, 'Visible','On');
-             set(handles.text_Niteration, 'Visible','On');
-              set(handles.text_Number_iteration,'String',0); 
+        set(handles.text_Niteration, 'Enable','On');
+        set(handles.text_Number_iteration, 'Enable','On');
+        set(handles.text_Number_iteration, 'Visible','On');
+        set(handles.text_Niteration, 'Visible','On');
+        set(handles.text_Number_iteration,'String',0); 
 
-             set(handles.text_Runing,'Visible','On');
-             set(handles.text_Runing,'Enable','On');
-             set(handles.text_Runing,'String','Running ...');
+        set(handles.text_Runing,'Visible','On');
+        set(handles.text_Runing,'Enable','On');
+        set(handles.text_Runing,'String','Running ...');
              
-            LoadParametersSR;
-                            handles.opt.cancel = 0;
-                            set(handles.pushbutton_Cancel,'Visible','On');                          
-                set(handles.pushbutton_Cancel,'Enable','On');
-                pause(0.1)
-           
-             set(handles.pushbutton_LRG,'Enable','off');
-            set(handles.pushbutton_SRG,'Enable','off');
-             set(handles.pushbutton_saveSR,'Visible','off');
-             set(handles.pushbutton_saveSR,'Enable','off');
-        
-        
+        LoadParametersSR;
+        handles.opt.cancel = 0;
+        set(handles.pushbutton_Cancel,'Visible','On');                          
+        set(handles.pushbutton_Cancel,'Enable','On');
+        pause(0.1)
+
+        set(handles.pushbutton_LRG,'Enable','off');
+        set(handles.pushbutton_SRG,'Enable','off');
+        set(handles.pushbutton_saveSR,'Visible','off');
+        set(handles.pushbutton_saveSR,'Enable','off');        
     end
+
     switch method
-        %% Bicubic
-        case 1
-             
+        case 1 %% Bicubic
             [handles.srimage.x,handles.srimage.out] = BicubicSR(handles.y,handles.opt);
             
-              
-        %% solvex_var
-        case 2
-           
-            
+        case 2 %% solvex_var    
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_TV_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
-            
             [handles.srimage.x,handles.srimage.out]= solvex_var(handles.y,handles.opt,handles.HRimage,handles);    
-           
-        
-        %% solvex_varL4
-        case 3
-          
-            
+                   
+        case 3 %% solvex_varL4
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_L4_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
-          
             [handles.srimage.x,handles.srimage.out]= solvex_varL4(handles.y,handles.opt,handles.HRimage,handles); 
            
-        %% solvex_varL4SAR
-        case 4 
-          
+        case 4 %% solvex_varL4SAR
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             handles.opt.lambda_prior = 0; % SAR prior is seleted; with value 1 the norm l1 prior is selected
           
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
-            
-  %% solvex_varL4SAR Combination
-        case 5 
-            
-            
+
+        case 5 %% solvex_varL4SAR Combination            
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
-           handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
-             set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+            handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+            set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
             
             %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
            
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
                       
- %% solvex_varTVSAR Combination
-        case 6 
-            
-            
+        case 6 %% solvex_varTVSAR Combination
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
-           handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
-             set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
+            handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
+            set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
             
             %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
            
             [handles.srimage.x,handles.srimage.out]= solvex_varTVSAR(handles.y,handles.opt,handles.HRimage,handles);   
                             
-        %% RobustSR
-        case 7 
-          
-
+        case 7 %% RobustSR
             FILE_log = fopen(sprintf('tempSR/LOG_RSR_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
            
             [handles.srimage.x,handles.srimage.out]= RobustSR(handles.y,handles.opt,handles.HRimage,handles);
            
-            
-        %% Zomet
-        case 8             
-           
+        case 8 %% Zomet           
             FILE_log = fopen(sprintf('tempSR/LOG_Zomet_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
-           
-            [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);
-            
-    end
-    
+            [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
+    end % end switch
        
-            set(handles.pushbutton_SRG,'Enable','on');
-            set(handles.pushbutton_Cancel,'Enable','off');
-             set(handles.pushbutton_Cancel,'Visible','Off');
-              set(handles.pushbutton_saveSR,'Visible','on');
-              set(handles.pushbutton_saveSR,'Enable','on');
+    set(handles.pushbutton_SRG,'Enable','on');
+    set(handles.pushbutton_Cancel,'Enable','off');
+    set(handles.pushbutton_Cancel,'Visible','Off');
+    set(handles.pushbutton_saveSR,'Visible','on');
+    set(handles.pushbutton_saveSR,'Enable','on');
 
-             set(handles.text_Runing,'String','Completed ...');
-          if method >1   
-            fclose(handles.opt.LogFile);
-          end
+    set(handles.text_Runing,'String','Completed ...');
+
+    if method >1   
+        fclose(handles.opt.LogFile);
+    end
+
     handles.srimage.x = reshape(handles.srimage.x,[handles.opt.M,handles.opt.N]);
     axes(handles.HRimage);
-     set(handles.text_Msr,'String',handles.opt.M);
-        set(handles.text_Nsr,'String',handles.opt.N);
+    set(handles.text_Msr,'String',handles.opt.M);
+    set(handles.text_Nsr,'String',handles.opt.N);
     imshow(handles.srimage.x);
     
-    if mode == 2
+    if mode == 2 % simulation
         set(handles.text_mse,'Enable','On');
         set(handles.text_psnr,'Enable','On');
 
@@ -930,7 +900,7 @@ end
         set(handles.pushbutton_LRG,'Enable','Off');
     end
 
-    if mode == 2
+    if mode == 2 % simulation
         
             set(handles.text_trwarp,'Visible','Off');
             set(handles.popupmenu_warpresults,'Visible','Off');
@@ -2131,11 +2101,11 @@ it = handles.srimage.out.maxPSNR_it;
 
 boton = get(handles.pushbutton_BestResults,'String');
 if boton == 'Best Results',
-   set(handles.pushbutton_BestResults,'String','Last Results');
-   set(handles.text_mse2,'String',num2str(handles.srimage.out.MSEs(it)));
+    set(handles.pushbutton_BestResults,'String','Last Results');
+    set(handles.text_mse2,'String',num2str(handles.srimage.out.MSEs(it)));
     set(handles.text_psnr2,'String',num2str(handles.srimage.out.maxPSNR,'%f dB'));
     set(handles.text_Number_iteration,'String', num2str(handles.srimage.out.maxPSNR_it));
-     axes(handles.HRimage), imshow(handles.srimage.out.maxPSNR_x);
+    axes(handles.HRimage), imshow(handles.srimage.out.maxPSNR_x);
 else
     set(handles.pushbutton_BestResults,'String','Best Results');
     set(handles.text_mse2,'String',num2str(handles.srimage.out.MSEs(end)));
