@@ -18,6 +18,8 @@
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+%% TODO: show images as iterations update
 function [x,out,varargout] = solvex_var(y,opt,HRaxis,handles)
 
 if strcmp(opt.method,'variational'),
