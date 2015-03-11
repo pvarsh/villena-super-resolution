@@ -58,18 +58,18 @@ handles.opt.res = 2;
 
 % Load Base Options
 %% Specific to Bayesian methods
-%opt.noise_estimate = 'COMMON';
-% handles.opt.noise_estimate = 'SEPARATE';
+opt.noise_estimate = 'COMMON';
+handles.opt.noise_estimate = 'SEPARATE';
 handles.opt.LK_maxit = 35;
 handles.opt.LK_thr = 1e-4;
-% handles.opt.PCG_minit = 20;
-% handles.opt.PCG_maxit = 100;
-% handles.opt.PCG_thr = 1e-10;
-% handles.opt.maxit = 100;%opt.maxit = 100;
+handles.opt.PCG_minit = 20;
+handles.opt.PCG_maxit = 100;
+handles.opt.PCG_thr = 1e-10;
+handles.opt.maxit = 100;%opt.maxit = 100;
 % handles.opt.thr = 1e-5;
 
-% handles.opt.InitWithAvgImg = 1;
-% handles.opt.InitImgExists = 0;
+handles.opt.InitWithAvgImg = 1;
+handles.opt.InitImgExists = 0;
 
 % %% Output options
 % handles.opt.WriteImages = 0;
@@ -77,13 +77,49 @@ handles.opt.LK_thr = 1e-4;
 % handles.opt.KeepHistory = 0;
 % handles.opt.verbose = 1; 
 handles.opt.debug = 0;
-% handles.opt.interv_ShowImages = 1; % Show images each opt.interv_ShowImages iterations
-% handles.opt.FixedBeta = 0;        
+handles.opt.interv_ShowImages = 0; %was 1 % Show images each opt.interv_ShowImages iterations
+handles.opt.FixedBeta = 0;        
 %----------------
+
+%% From LoadParametersSR.m
+% handles.opt.P = MFSR;
+% handles.output = hObject;
+% guidata(hObject, handles);
+handles.opt.sx = handles.opt.sx_init;
+handles.opt.sy = handles.opt.sy_init;
+handles.opt.theta = handles.opt.theta_init;
+handles.opt.P = double(handles.opt.res);
+handles.opt.alpha = 0.6;
+handles.opt.beta = 1/100;
+handles.opt.lambda = 0.005;
+handles.opt.maxit = 300;
+handles.opt.InitImgExists = 0;
+handles.opt.ShowImages = 0; % was 1
+handles.opt.WriteImages = 0;
+handles.opt.KeepHistory = 0;
+handles.opt.thr = 1e-5;
+handles.opt.PCG_maxit = 100;
+handles.opt.LK_maxit = 100;
+handles.opt.debug = 0;
+handles.opt.LK_thr =1e-4;
+handles.opt.noise_estimate = 'SEPARATE';
+handles.opt.PCG_thr =1e-10;
+handles.opt.PCG_minit = 10;
+handles.opt.verbose = 1;
+handles.opt.FixedBeta = 0 ; 
+handles.opt.lambda_prior = 1;
+handles.opt.method = 'variational';
+
+handles.opt.ApproxSigma = 1;
+
+handles.opt.DIVIDE_U = 0;
+handles.opt.FixedParameters = 0;
+%% end from LoadParametersSR.m
 
 % set(handles.text_Runing,'Visible','Off');
 % set(handles.text_Runing,'Enable','Off');
 % set(handles.opt.ref_cancel,'Value',0);
+handles.opt.ref_cancel = 0;
 % set(handles.pushbutton_saveSR,'Visible','off');
 % set(handles.pushbutton_saveSR,'Enable','off');
 
@@ -228,7 +264,9 @@ end % end cases
 
 %% Skipping lines 770-813
 
-method = 1 % hardcodes solvex_var
+method = 3 % hardcodes solvex_var
+
+handles.HRimage = axes();
 
 switch method
     case 1 %% Bicubic
@@ -276,5 +314,11 @@ switch method
         handles.opt.LogFile = FILE_log;
         [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
 end % end switch
+
+%% Show SR image
+x = handles.srimage.x;
+x = reshape(x, handles.opt.M, handles.opt.N);
+x = uint8(x);
+imshow(x);
 
 
