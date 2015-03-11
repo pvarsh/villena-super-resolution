@@ -16,18 +16,14 @@ img2 = img2(:,:,1:n_channels); % only keep one channel
 y1 = double(img1(:));
 y2 = double(img2(:));
 
-disp(size(img1));
-disp(size(img2));
-disp(size(y1));
-disp(size(y2));
 % 
 % imshow(img);
 % 
-%  
 SR_factor = 2; % magnification
 [H, W] = size(img1); % Height and Width
 
 options.L = 1;
+options.method = 'variational';
 options.res = SR_factor;
 options.n = H;
 options.m = W;
