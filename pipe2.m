@@ -1,4 +1,4 @@
-function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
+function pipe2(filepath, outpath, sr_method, blur_method, blur_size, blur_var)
 
     % Pipeline to construct high resolution image.
 
@@ -195,14 +195,15 @@ function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
     % blur_method = 2; % hardcodes blur option
     % blur_size = 3;
 
-    disp('>> Deblurring...');
+    % disp('>> Deblurring...');
     switch blur_method
         case 1
+            disp('>> No deblurring')
             handles.opt.h = 1;
         case 2
             % blur_size = get(handles.edit_blur_size_HR,'String');
             % blur_size = uint8(str2num(blur_size));
-
+            disp(['>> Deblurring: Average blur with size ' num2str(blur_size)])
             if isempty(blur_size)
                 blur_size=0;
             end
@@ -217,30 +218,33 @@ function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
             end
 
         case 3
+            disp(['>> Deblurring: Gaussian blur with size ' num2str(blur_size) ' and variance ' num2str(blur_var)])
+
             % blur_size = get(handles.edit_blur_size_HR,'String');
             % blur_size = uint8(str2num(blur_size));
-            % sgm = get(handles.edit_varh_HR,'String');
-            % sgm = str2num(sgm);
+            % blur_var = get(handles.edit_varh_HR,'String');
+            % blur_var = str2num(blur_var);
 
             if isempty(blur_size)
                 blur_size=0;
             end
 
-            if isempty(sgm)
-                sgm = 0;
+            if isempty(blur_var)
+                blur_var = 0;
             end
 
-            if (blur_size <= 0) | (sgm <= 0)
+            if (blur_size <= 0) | (blur_var <= 0)
                 warndlg({'Invalid blurring matrix parameter values.',' Using default values '},'Invalid Value',...
                     'modal');
                 set(handles.edit_blur_size_HR,'String','3');
                 set(handles.edit_varh_HR,'String','0.5');
                 handles.opt.h = fspecial('gaussian');
             else
-                handles.opt.h = fspecial('gaussian',double(blur_size),sgm);
+                handles.opt.h = fspecial('gaussian',double(blur_size), blur_var);
             end
 
         case 4
+            disp(['>> Deblurring: Radial blur with size ' num2str(blur_size)])
             % blur_size = get(handles.edit_blur_size_HR,'String');
             % blur_size = str2num(blur_size);
             
