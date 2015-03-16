@@ -1,4 +1,4 @@
-function pipe2(filepath, outpath, sr_method)
+function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
 
     % Pipeline to construct high resolution image.
 
@@ -192,69 +192,69 @@ function pipe2(filepath, outpath, sr_method)
     %% TODO: accept command line parameters
     %% TODO: document cases
 
-    o_blur = 2; % hardcodes blur option
-    size_h = 3;
+    % blur_method = 2; % hardcodes blur option
+    % blur_size = 3;
 
     disp('>> Deblurring...');
-    switch o_blur
+    switch blur_method
         case 1
             handles.opt.h = 1;
         case 2
-            % size_h = get(handles.edit_size_h_HR,'String');
-            % size_h = uint8(str2num(size_h));
+            % blur_size = get(handles.edit_blur_size_HR,'String');
+            % blur_size = uint8(str2num(blur_size));
 
-            if isempty(size_h)
-                size_h=0;
+            if isempty(blur_size)
+                blur_size=0;
             end
 
-            if size_h <= 0
+            if blur_size <= 0
                 warndlg({'Invalid blurring matrix size.',' Using default value '},'Invalid Value',...
                     'modal');
-                set(handles.edit_size_h_HR,'String','3');
+                set(handles.edit_blur_size_HR,'String','3');
                 handles.opt.h = fspecial('average');
             else
-                handles.opt.h = fspecial('average',double(size_h));
+                handles.opt.h = fspecial('average',double(blur_size));
             end
 
         case 3
-            % size_h = get(handles.edit_size_h_HR,'String');
-            % size_h = uint8(str2num(size_h));
+            % blur_size = get(handles.edit_blur_size_HR,'String');
+            % blur_size = uint8(str2num(blur_size));
             sgm = get(handles.edit_varh_HR,'String');
             sgm = str2num(sgm);
 
-            if isempty(size_h)
-                size_h=0;
+            if isempty(blur_size)
+                blur_size=0;
             end
 
             if isempty(sgm)
                 sgm = 0;
             end
 
-            if (size_h <= 0) | (sgm <= 0)
+            if (blur_size <= 0) | (sgm <= 0)
                 warndlg({'Invalid blurring matrix parameter values.',' Using default values '},'Invalid Value',...
                     'modal');
-                set(handles.edit_size_h_HR,'String','3');
+                set(handles.edit_blur_size_HR,'String','3');
                 set(handles.edit_varh_HR,'String','0.5');
                 handles.opt.h = fspecial('gaussian');
             else
-                handles.opt.h = fspecial('gaussian',double(size_h),sgm);
+                handles.opt.h = fspecial('gaussian',double(blur_size),sgm);
             end
 
         case 4
-            % size_h = get(handles.edit_size_h_HR,'String');
-            % size_h = str2num(size_h);
+            % blur_size = get(handles.edit_blur_size_HR,'String');
+            % blur_size = str2num(blur_size);
             
-            if isempty(size_h)
-                size_h=0;
+            if isempty(blur_size)
+                blur_size=0;
             end
             
-            if size_h <= 0
+            if blur_size <= 0
                 warndlg({'Invalid blurring matrix size.',' Using default value '},'Invalid Value',...
                     'modal');
-                set(handles.edit_size_h_HR,'String','5');
+                set(handles.edit_blur_size_HR,'String','5');
                 handles.opt.h = fspecial('disk');
             else
-                handles.opt.h = fspecial('disk',size_h);
+                handles.opt.h = fspecial('disk',blur_size);
             end
 
         case 5
@@ -264,25 +264,25 @@ function pipe2(filepath, outpath, sr_method)
             handles.opt.h = h;
             
         case 6
-            size_h = get(handles.edit_size_h_HR,'String');
-            size_h = uint8(str2num(size_h));
+            blur_size = get(handles.edit_blur_size_HR,'String');
+            blur_size = uint8(str2num(blur_size));
             
-            if isempty(size_h)
-                size_h=0;
+            if isempty(blur_size)
+                blur_size=0;
             end
             
             xx = reshape(handles.yvecs{1},handles.opt.m,handles.opt.n);
             xx = imresize(xx, handles.opt.res, 'bicubic');
             
-            if size_h <= 0
+            if blur_size <= 0
                 warndlg({'Invalid blurring matrix size.',' Using default value '},'Invalid Value',...
                     'modal');
-                set(handles.edit_size_h_HR,'String','3');
+                set(handles.edit_blur_size_HR,'String','3');
                 
-                [xx, handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
+                [xx, handles.opt.h] = deconvblind(xx,ones(blur_size,blur_size));
                clear xx
             else
-                [xx,  handles.opt.h] = deconvblind(xx,ones(size_h,size_h));
+                [xx,  handles.opt.h] = deconvblind(xx,ones(blur_size,blur_size));
                 clear xx
             end    
             
