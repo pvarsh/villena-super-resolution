@@ -40,8 +40,9 @@ function pipe2(filepath, outpath, sr_method)
                 handles.opt.m = h;
                 handles.opt.n = w;
             end % if
-        end % for
             images(:,:,i) = im;
+        end % for
+            
     else % load 4 hardcoded images
         disp('>> Loading hardcoded images...')
         num_LR = 4;
@@ -191,15 +192,16 @@ function pipe2(filepath, outpath, sr_method)
     %% TODO: accept command line parameters
     %% TODO: document cases
 
-    o_blur = 1; % hardcodes blur option
+    o_blur = 2; % hardcodes blur option
+    size_h = 15;
 
     disp('>> Deblurring...');
     switch o_blur
         case 1
             handles.opt.h = 1;
         case 2
-            size_h = get(handles.edit_size_h_HR,'String');
-            size_h = uint8(str2num(size_h));
+            % size_h = get(handles.edit_size_h_HR,'String');
+            % size_h = uint8(str2num(size_h));
 
             if isempty(size_h)
                 size_h=0;
@@ -215,8 +217,8 @@ function pipe2(filepath, outpath, sr_method)
             end
 
         case 3
-            size_h = get(handles.edit_size_h_HR,'String');
-            size_h = uint8(str2num(size_h));
+            % size_h = get(handles.edit_size_h_HR,'String');
+            % size_h = uint8(str2num(size_h));
             sgm = get(handles.edit_varh_HR,'String');
             sgm = str2num(sgm);
 
@@ -239,8 +241,8 @@ function pipe2(filepath, outpath, sr_method)
             end
 
         case 4
-            size_h = get(handles.edit_size_h_HR,'String');
-            size_h = str2num(size_h);
+            % size_h = get(handles.edit_size_h_HR,'String');
+            % size_h = str2num(size_h);
             
             if isempty(size_h)
                 size_h=0;
@@ -269,7 +271,7 @@ function pipe2(filepath, outpath, sr_method)
                 size_h=0;
             end
             
-            xx=reshape(handles.yvecs{1},handles.opt.m,handles.opt.n);
+            xx = reshape(handles.yvecs{1},handles.opt.m,handles.opt.n);
             xx = imresize(xx, handles.opt.res, 'bicubic');
             
             if size_h <= 0
@@ -292,52 +294,60 @@ function pipe2(filepath, outpath, sr_method)
 
     method = sr_method; % hardcodes solvex_var
 
-    handles.HRimage = axes();
+    % handles.HRimage = axes();
+    handles.HRimage = 5;
 
-    disp('>> Superresolving...')
     switch method
         case 1 %% Bicubic
+            disp('>> Superresolving bicubic...')
             [handles.srimage.x,handles.srimage.out] = BicubicSR(handles.y,handles.opt);
             
-        case 2 %% solvex_var    
+        case 2 %% solvex_var  
+            disp('>> Superresolving TV...')
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_TV_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             [handles.srimage.x,handles.srimage.out]= solvex_var(handles.y,handles.opt,handles.HRimage,handles);    
                    
         case 3 %% solvex_varL4
+            disp('>> Superresolving TV L4...')
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_L4_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             [handles.srimage.x,handles.srimage.out]= solvex_varL4(handles.y,handles.opt,handles.HRimage,handles); 
            
         case 4 %% solvex_varL4SAR
+            disp('>> Superresolving variational L4 SAR...')
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             handles.opt.lambda_prior = 0; % SAR prior is seleted; with value 1 the norm l1 prior is selected
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
 
-        case 5 %% solvex_varL4SAR Combination            
+        case 5 %% solvex_varL4SAR Combination 
+            disp('>> Superresolving variational L4 SAR combination...')         
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             % handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
 
             % set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
-            %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
+            handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
                       
         case 6 %% solvex_varTVSAR Combination
+            disp('>> Superresolving variational TV SAR combination...')
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             % handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
             % set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
-            %handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
+            handles.opt.lambda_prior = 0.5; % SAR prior is seleted; with value 1 the norm l1 prior is selected
             [handles.srimage.x,handles.srimage.out]= solvex_varTVSAR(handles.y,handles.opt,handles.HRimage,handles);   
                             
         case 7 %% RobustSR
+            disp('>> Superresolving ROBUST SR...')
             FILE_log = fopen(sprintf('tempSR/LOG_RSR_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             [handles.srimage.x,handles.srimage.out]= RobustSR(handles.y,handles.opt,handles.HRimage,handles);
            
-        case 8 %% Zomet           
+        case 8 %% Zomet
+            disp('>> Superresolving Zomet...')
             FILE_log = fopen(sprintf('tempSR/LOG_Zomet_maxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
@@ -349,7 +359,9 @@ function pipe2(filepath, outpath, sr_method)
     x = uint8(x);
     imwrite(x, strcat(outpath, '/out_', datestr(now), '.png'))
 
+    % close(handles.HRimage)
     %% Show SR image
-    figure(), imshow(x);
-
+    % figure('name', 'Myfig', 'Position', [100,100,100,100], 'units', 'normalized', 'outerposition', [0 0 1 1]), imshow(x)  % subplots_adjust(left=None, bottom=None, right=None, top=None,
+    %                   wspace=None, hspace=None);
+    figure, imshow(x, 'InitialMagnification', 400)
 end % end pipe2

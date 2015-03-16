@@ -59,7 +59,7 @@ end
 
 maxPSNR = 0;
 for i=1:opt.maxit,
-     set(handles.text_Number_iteration,'String',i); 
+    % set(handles.text_Number_iteration,'String',i); 
     oldx = x;
     
     % Compute the backprojection term
@@ -96,7 +96,7 @@ for i=1:opt.maxit,
     end
     
     if opt.ShowImages, 
-         set(handles.text_Msr,'String',M);
+        set(handles.text_Msr,'String',M);
         set(handles.text_Nsr,'String',N);
         axes(HRaxis), imshow(reshape(x,[opt.M,opt.N]))
     end
@@ -116,10 +116,10 @@ for i=1:opt.maxit,
     if ~opt.Real & PSNRs(i) < 0,
         break;
     end
-    opt.cancel = get(opt.ref_cancel,'Value');
-       if opt.cancel,
-        break;
-    end
+    % opt.cancel = get(opt.ref_cancel,'Value');
+    % if opt.cancel,
+    %     break;
+    % end
 end
 
 if ~opt.Real,
@@ -127,7 +127,7 @@ if ~opt.Real,
     out.MSE = MSEs(end);
     out.PSNRs = PSNRs;
     out.PSNR = PSNRs(end);
-      out.maxPSNR  = maxPSNR ;
+    out.maxPSNR  = maxPSNR ;
     out.maxPSNR_x = reshape(maxPSNR_x,M,N);
     out.maxPSNR_it = maxPSNR_it;
 end

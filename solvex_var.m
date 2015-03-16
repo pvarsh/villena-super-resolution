@@ -217,7 +217,7 @@ maxPSNR_sy = opt.sy;
 maxPSNR_theta = opt.theta;
 
 disp('Overriding maxit in solvex_var.m')
-opt.maxit = 3;
+opt.maxit = 30;
 
 for i=1:opt.maxit,
     disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...'])

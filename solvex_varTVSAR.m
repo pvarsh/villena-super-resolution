@@ -232,7 +232,7 @@ PSNRminERROR = 0;
 for i=1:opt.maxit,
     fprintf(opt.LogFile,'\n-------------------------------------------------------------------\n');
     fprintf(opt.LogFile,'Iteration %d\n',i);
-     set(handles.text_Number_iteration,'String',i); 
+     % set(handles.text_Number_iteration,'String',i); 
     oldx = x(:);
 
     %% Estimate the image
@@ -436,8 +436,8 @@ for i=1:opt.maxit,
     if ~opt.Real, 
         MSEs(i) = sum(sum( (x(:) - opt.xtrue(:)).^2 ) )/nopix;
         PSNRs(i) = 10*log10(1/MSEs(i));
-         set(handles.text_mse2,'String',num2str(MSEs(i)));
-         set(handles.text_psnr2,'String',num2str(PSNRs(i),'%f dB'));
+         % set(handles.text_mse2,'String',num2str(MSEs(i)));
+         % set(handles.text_psnr2,'String',num2str(PSNRs(i),'%f dB'));
 
         if PSNRs(i) > maxPSNR,
             maxPSNR = PSNRs(i);
@@ -501,10 +501,10 @@ for i=1:opt.maxit,
         history_Lambda{i} = Lambdas;
         history.alpha_sar{i}=alpha_sar;
     end
-    opt.cancel = get(opt.ref_cancel,'Value');
-    if opt.cancel,
-        break;
-    end
+    % opt.cancel = get(opt.ref_cancel,'Value');
+    % if opt.cancel,
+    %     break;
+    % end
     
     if xconv < opt.thr,
         break;
