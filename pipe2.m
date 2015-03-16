@@ -219,8 +219,8 @@ function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
         case 3
             % blur_size = get(handles.edit_blur_size_HR,'String');
             % blur_size = uint8(str2num(blur_size));
-            sgm = get(handles.edit_varh_HR,'String');
-            sgm = str2num(sgm);
+            % sgm = get(handles.edit_varh_HR,'String');
+            % sgm = str2num(sgm);
 
             if isempty(blur_size)
                 blur_size=0;
@@ -245,7 +245,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, blur_size)
             % blur_size = str2num(blur_size);
             
             if isempty(blur_size)
-                blur_size=0;
+                blur_size = 0;
             end
             
             if blur_size <= 0
