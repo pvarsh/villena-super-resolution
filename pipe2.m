@@ -193,7 +193,7 @@ function pipe2(filepath, outpath, sr_method)
     %% TODO: document cases
 
     o_blur = 2; % hardcodes blur option
-    size_h = 15;
+    size_h = 3;
 
     disp('>> Deblurring...');
     switch o_blur
