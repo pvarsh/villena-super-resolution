@@ -1,4 +1,13 @@
-function pipe2(filepath, outpath, sr_method, blur_method, blur_size, blur_var)
+% function pipe2(filepath, outpath, sr_method, blur_method, blur_size, blur_var)
+function pipe2(filepath, outpath, sr_method, blur_method, varargin)
+
+    if nargin >= 5
+        blur_size = varargin{1};
+    end
+
+    if nargin == 6
+        blur_var = varargin{2};
+    end
 
     % Pipeline to construct high resolution image.
 
