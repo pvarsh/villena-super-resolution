@@ -1,3 +1,35 @@
+%% ----------------------------------------------------------------
+%  Parameters:
+%       - filepath: directory with low-resolution files
+%       - outpath: directory for output
+%       - sr_method [1-8]:
+%               - 1: Bicubic (using 1st image only)
+%               - 2: variational
+%               - 3: variational with L4 prior
+%               - 4: variational with SAR prior
+%               - 5: variational with L4 SAR combination prior
+%               - 6: variational TV SAR combination
+%               - 7: RobustSR
+%               - 8: zomet
+%       - blur_method:
+%               - 1: No deblurring
+%               - 2: Average blur
+%               - 3: Gaussian blur
+%               - 4: Radial blur
+%               - 5: Custom matrix (not tested)
+%               - 6: Blind deconvolution (not tested)
+%       - varargin:
+%               - blur_size (in pixels (TODO: SR or LR pixels?))
+%               - blur_variance 
+%               - prior distribution weight for mixture of distributions
+%                 (e.g. L4 and SAR, TV and SAR etc.) 
+%% ----------------------------------------------------------------
+
+
+
+
+
+
 % function pipe2(filepath, outpath, sr_method, blur_method, blur_size, blur_var)
 function pipe2(filepath, outpath, sr_method, blur_method, varargin)
 
