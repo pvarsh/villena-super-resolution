@@ -42,7 +42,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     end
 
     if nargin == 7
-        lambda_prior = varargin{3};
+        handles.opt.lambda_prior = varargin{3};
     else
         lambda_prior = []
     end
@@ -177,7 +177,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     handles.opt.PCG_minit = 10;
     handles.opt.verbose = 1;
     handles.opt.FixedBeta = 0 ; 
-    handles.opt.lambda_prior = 1;
+    % handles.opt.lambda_prior = 1;
     handles.opt.method = 'variational';
 
     handles.opt.ApproxSigma = 1;
@@ -186,7 +186,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     handles.opt.FixedParameters = 0;
     %% end from LoadParametersSR.m
 
-    handles.opt.lambda_prior = num2str(0.5); % weight for combination of priors
+    % handles.opt.lambda_prior = num2str(0.5); % weight for combination of priors
 
     % set(handles.text_Runing,'Visible','Off');
     % set(handles.text_Runing,'Enable','Off');
@@ -344,9 +344,9 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     %% Skipping lines 770-813
 
     method = sr_method; % hardcodes solvex_var
-    if ~isempty(lambda_prior)
-        handles.opt.lambda_prior = lambda_prior;
-    end
+    % if ~isempty(lambda_prior)
+    %     handles.opt.lambda_prior = lambda_prior;
+    % end
 
     % handles.HRimage = axes();
     handles.HRimage = 5;
@@ -407,15 +407,51 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
             [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
     end % end switch
 
-    disp('>> Saving SR image')
+
+    disp('>> Saving SR image and writing log');
+    timestamp = datestr(now);
+    logFileId = fopen(['sr_out_' timestamp '.log'], 'w');
+    fprintf(logFileId, 'Villena et al. Super Resolution Software. File: sr_cli.m\n')
+    fprintf(logFileId, strcat(timestamp, '\n'))
+    fprintf(logFileId, strcat('filepath:\t', filepath, '\n'));
+    fprintf(logFileId, strcat('outpath:\t', outpath, '\n'));
+    fprintf(logFileId, strcat('SR filename:\t', 'sr_out_', timestamp, '.png', '\n'))
+    fprintf(logFileId, strcat('# images:\t', num2str(handles.opt.L), '\n'))
+    fprintf(logFileId, strcat('srmethod:\t', num2str(sr_method), '\n'));
+    fprintf(logFileId, strcat('blur:\t\t', num2str(blur_method), '\n'));
+    if ~exist('blur_size')
+        blur_size = 'None';
+    end
+    if ~exist('blur_var')
+        blur_var = 'None';
+    end
+    % disp('aaaaaa')
+    % disp(class(handles.opt))
+    % disp(handles.opt.lambda_prior)
+    if ~isfield(handles.opt, 'lambda_prior')
+        handles.opt.lambda_prior = 'None';
+    end
+    fprintf(logFileId, strcat('blur_size:\t', num2str(blur_size), '\n'));
+    fprintf(logFileId, strcat('blur_variance:\t', num2str(blur_var), '\n'));
+    fprintf(logFileId, strcat('lambda_prior:\t', num2str(handles.opt.lambda_prior), '\n'));
+
+
+    % fprintf(logFileId, strcat('varargin:', varargin))
+
+
+
+
+
+    imFileName = ['sr_out_' timestamp '.png'];
+
     x = handles.srimage.x;
     x = reshape(x, handles.opt.M, handles.opt.N);
     x = uint8(x);
-    imwrite(x, strcat(outpath, '/out_', datestr(now), '.png'))
+    imwrite(x, imFileName);
 
     % close(handles.HRimage)
     %% Show SR image
     % figure('name', 'Myfig', 'Position', [100,100,100,100], 'units', 'normalized', 'outerposition', [0 0 1 1]), imshow(x)  % subplots_adjust(left=None, bottom=None, right=None, top=None,
     %                   wspace=None, hspace=None);
-    figure, imshow(x, 'InitialMagnification', 400)
+    % figure, imshow(x, 'InitialMagnification', 400);
 end % end pipe2
