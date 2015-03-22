@@ -79,33 +79,58 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
         num_LR = numel(im_files);
         for i=1:num_LR
             im_f_name = strcat(filepath, '/', im_files(i).name);
+
+            % grayscale conversion (Algorithms do not use color information)
+            im_info = imfinfo(im_f_name);
+            im_color_type = im_info.ColorType;
             im = imread(im_f_name);
-            if i == 1 % initialize container
-                [h,w,chan] = size(im);
-                images = zeros(h,w,num_LR);
-                images(:,:,i) = im;
-                handles.opt.m = h;
-                handles.opt.n = w;
-            end % if
-            images(:,:,i) = im;
-        end % for
-            
-    else % load 4 hardcoded images
-        disp('>> Loading hardcoded images...')
-        num_LR = 4;
-        for i = 1:num_LR
-            im_f_name = strcat('images/lena1_',num2str(i),'.png');
-            im = imread(im_f_name);
-            if i == 1 % initialize container
-                [h,w,chan] = size(im);
-                images = zeros(h,w,num_LR);
-                images(:,:,i) = im;
-                handles.opt.m = h;
-                handles.opt.n = w;
+            if ~strcmp(im_color_type, 'grayscale')
+                im = rgb2gray(im);
             end
+            % end: grayscale conversion
+
+            if i == 1 % initialize container
+                [h,w,chan] = size(im);
+                images = zeros(h,w,num_LR);
+                images(:,:,i) = im;
+                handles.opt.m = h;
+                handles.opt.n = w;
+                npix = handles.opt.n * handles.opt.m;
+            end % end: if
+
+            im = double(im);
+            im = im/(max(max(im)));
+
+            aux = im( (i-1)*npix_1 : i*npix );
+
+            im = reshape(aux, handles.opt.m, handles.opt.n)
+
+            im = im(:); % unroll image into column vector
+
+
+
+            imshow(im)
             images(:,:,i) = im;
-        end % for
+        end % end: for
+
+    % else % load 4 hardcoded images
+    %     disp('>> Loading hardcoded images...')
+    %     num_LR = 4;
+    %     for i = 1:num_LR
+    %         im_f_name = strcat('images/lena1_',num2str(i),'.png');
+    %         im = imread(im_f_name);
+    %         if not (strcmp())
+    %         if i == 1 % initialize container
+    %             [h,w,chan] = size(im);
+    %             images = zeros(h,w,num_LR);
+    %             images(:,:,i) = im;
+    %             handles.opt.m = h;
+    %             handles.opt.n = w;
+    %         end
+    %         images(:,:,i) = im;
+    %     end % for
     end % if
+    disp('111')
 
     y = []; % all lr_images as column vectors
 
