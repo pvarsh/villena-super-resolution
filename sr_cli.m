@@ -74,11 +74,12 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
 
     %% Load files from directory
     if (filepath ~= ' ') % load from directory
-        disp('>> Loading images from argument path...')
         im_files = dir(strcat(filepath,'/*.png'));
         num_LR = numel(im_files);
+        sprintf('>> Loading %d images from argument path...', numel(im_files))
         for i=1:num_LR
             im_f_name = strcat(filepath, '/', im_files(i).name);
+            disp(im_files(i).name)
 
             % grayscale conversion (Algorithms do not use color information)
             im_info = imfinfo(im_f_name);
@@ -87,29 +88,36 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
             if ~strcmp(im_color_type, 'grayscale')
                 im = rgb2gray(im);
             end
+
             % end: grayscale conversion
 
             if i == 1 % initialize container
-                [h,w,chan] = size(im);
-                images = zeros(h,w,num_LR);
-                images(:,:,i) = im;
+                [h, w, chan] = size(im);
+                max_dim = max(h,w);
+                images = zeros(max_dim, max_dim, num_LR);
                 handles.opt.m = h;
                 handles.opt.n = w;
-                npix = handles.opt.n * handles.opt.m;
             end % end: if
 
-            im = double(im);
-            im = im/(max(max(im)));
+            % square images with letterbox or pillarbox
+            [nrow, ncol] = size(im);
+            if nrow > ncol
+                box_edge = floor((nrow-ncol)/2)+1;
+                square_im = zeros(nrow, nrow);
+                square_im(:, box_edge:box_edge+ncol-1) = im(:,:);
+                im = square_im;
+                clear square_im;
+            elseif ncol >nrow
+                box_edge = floor((ncol-nrow)/2)+1;
+                square_im = zeros(ncol, ncol);
+                imshow(square_im)
+                square_im(box_edge:box_edge+nrow-1, :) = im(:,:);
+                im = square_im;
+                clear square_im;
+            end
+            [handles.opt.m, handles.opt.n] = size(im);
+            % end: square images with letterbox or pillarbox
 
-            aux = im( (i-1)*npix_1 : i*npix );
-
-            im = reshape(aux, handles.opt.m, handles.opt.n)
-
-            im = im(:); % unroll image into column vector
-
-
-
-            imshow(im)
             images(:,:,i) = im;
         end % end: for
 
@@ -130,13 +138,12 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     %         images(:,:,i) = im;
     %     end % for
     end % if
-    disp('111')
 
     y = []; % all lr_images as column vectors
 
     for k = 1:num_LR
         yk = double(images(:,:,k));
-        % ys = yk/(max(max(yk))); % normalize
+        ys = yk/(max(max(yk))); % normalize
 
         yvecs{k} = yk(:);
         y = [y; yk(:)];
@@ -223,7 +230,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     % set(handles.pushbutton_BestResults,'Visible','off');
     % set(handles.pushbutton_BestResults,'Enable','off');
 
-    handles.opt.M =  handles.opt.m;
+    handles.opt.M =  handles.opt.m; 
     handles.opt.N =  handles.opt.n; % For the initial registration 
 
     handles.opt.xtrue = [];
@@ -436,14 +443,14 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     disp('>> Saving SR image and writing log');
     timestamp = datestr(now);
     logFileId = fopen(['sr_out_' timestamp '.log'], 'w');
-    fprintf(logFileId, 'Villena et al. Super Resolution Software. File: sr_cli.m\n')
-    fprintf(logFileId, strcat(timestamp, '\n'))
-    fprintf(logFileId, strcat('filepath:\t', filepath, '\n'));
-    fprintf(logFileId, strcat('outpath:\t', outpath, '\n'));
-    fprintf(logFileId, strcat('SR filename:\t', 'sr_out_', timestamp, '.png', '\n'))
-    fprintf(logFileId, strcat('# images:\t', num2str(handles.opt.L), '\n'))
-    fprintf(logFileId, strcat('srmethod:\t', num2str(sr_method), '\n'));
-    fprintf(logFileId, strcat('blur:\t\t', num2str(blur_method), '\n'));
+    fprintf(logFileId, 'Villena et al. Super Resolution Software. File: sr_cli.m\n');
+    fprintf(logFileId, strcat('-', timestamp, '\n'));
+    fprintf(logFileId, strcat('-', 'filepath:\t', filepath, '\n'));
+    fprintf(logFileId, strcat('-', 'outpath:\t', outpath, '\n'));
+    fprintf(logFileId, strcat('-', 'SR filename:\t', 'sr_out_', timestamp, '.png', '\n'));
+    fprintf(logFileId, strcat('-', '# images:\t', num2str(handles.opt.L), '\n'));
+    fprintf(logFileId, strcat('-', 'srmethod:\t', num2str(sr_method), '\n'));
+    fprintf(logFileId, strcat('-', 'blur:\t\t', num2str(blur_method), '\n'));
     if ~exist('blur_size')
         blur_size = 'None';
     end
@@ -456,9 +463,9 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     if ~isfield(handles.opt, 'lambda_prior')
         handles.opt.lambda_prior = 'None';
     end
-    fprintf(logFileId, strcat('blur_size:\t', num2str(blur_size), '\n'));
-    fprintf(logFileId, strcat('blur_variance:\t', num2str(blur_var), '\n'));
-    fprintf(logFileId, strcat('lambda_prior:\t', num2str(handles.opt.lambda_prior), '\n'));
+    fprintf(logFileId, strcat('-', 'blur_size:\t', num2str(blur_size), '\n'));
+    fprintf(logFileId, strcat('-', 'blur_variance:\t', num2str(blur_var), '\n'));
+    fprintf(logFileId, strcat('-', 'lambda_prior:\t', num2str(handles.opt.lambda_prior), '\n'));
 
 
     % fprintf(logFileId, strcat('varargin:', varargin))
