@@ -437,7 +437,7 @@ if index == 1
         handles.y = y;
         npix = handles.opt.n*handles.opt.m;
 
-         i=handles.opt.L;
+        i=handles.opt.L;
         aux = y((i-1)*npix+1:i*npix); 
        
         LRi(:,:,:,i) = reshape(aux,[handles.opt.m,handles.opt.n]);
