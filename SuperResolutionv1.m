@@ -345,7 +345,7 @@ if index == 1
             set(handles.text_Mlr,'String',handles.opt.m);
             set(handles.text_Nlr,'String',handles.opt.n);
             set(handles.LR_counter,'String',i); 
-        imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
+            imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
             imshow(uint8(handles.LRi(:,:,:,i)*(255/max(max(handles.LRi(:,:,:,i))))));
 
             % Normalice HRi
