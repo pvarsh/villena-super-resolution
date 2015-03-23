@@ -31,21 +31,37 @@
 
 
 % function pipe2(filepath, outpath, sr_method, blur_method, blur_size, blur_var)
-function pipe2(filepath, outpath, sr_method, blur_method, varargin)
+% function pipe2(filepath, outpath, sr_method, blur_method, varargin)
+function pipe2(pipe_options)
+    
+    filepath = pipe_options.filepath;
+    outpath = pipe_options.outpath;
+    handles.opt.outpath = outpath;
+    sr_method = pipe_options.sr_method;
+    blur_method = pipe_options.blur_method;
+    blur_size = pipe_options.blur_size;
+    blur_var = pipe_options.blur_var;
+    handles.opt.lambda_prior = pipe_options.lambda_prior;
 
-    if nargin >= 5
-        blur_size = varargin{1};
-    end
+    timestamp = datestr(now);
+    
+    handles.opt.out_f_name = ['/sr_out_' timestamp];
 
-    if nargin >= 6
-        blur_var = varargin{2};
-    end
+    handles.opt.WriteImages = 1;
 
-    if nargin == 7
-        handles.opt.lambda_prior = varargin{3};
-    else
-        lambda_prior = []
-    end
+    % if nargin >= 5
+    %     blur_size = varargin{1};
+    % end
+
+    % if nargin >= 6
+    %     blur_var = varargin{2};
+    % end
+
+    % if nargin == 7
+    %     handles.opt.lambda_prior = varargin{3};
+    % else
+    %     lambda_prior = []
+    % end
 
     % Pipeline to construct high resolution image.
 
@@ -110,7 +126,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
             elseif ncol >nrow
                 box_edge = floor((ncol-nrow)/2)+1;
                 square_im = zeros(ncol, ncol);
-                imshow(square_im)
+                % imshow(square_im)
                 square_im(box_edge:box_edge+nrow-1, :) = im(:,:);
                 im = square_im;
                 clear square_im;
@@ -197,7 +213,7 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     handles.opt.maxit = 300;
     handles.opt.InitImgExists = 0;
     handles.opt.ShowImages = 0; % was 1
-    handles.opt.WriteImages = 0;
+    % handles.opt.WriteImages = 0;
     handles.opt.KeepHistory = 0;
     handles.opt.thr = 1e-5;
     handles.opt.PCG_maxit = 100;
@@ -441,8 +457,8 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
 
 
     disp('>> Saving SR image and writing log');
-    timestamp = datestr(now);
-    logFileId = fopen(['sr_out_' timestamp '.log'], 'w');
+    % timestamp = datestr(now); % move to beginning of function
+    logFileId = fopen([outpath '/sr_out_' timestamp '.log'], 'w');
     fprintf(logFileId, 'Villena et al. Super Resolution Software. File: sr_cli.m\n');
     fprintf(logFileId, strcat('-', timestamp, '\n'));
     fprintf(logFileId, strcat('-', 'filepath:\t', filepath, '\n'));
@@ -457,7 +473,6 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     if ~exist('blur_var')
         blur_var = 'None';
     end
-    % disp('aaaaaa')
     % disp(class(handles.opt))
     % disp(handles.opt.lambda_prior)
     if ~isfield(handles.opt, 'lambda_prior')
@@ -467,14 +482,9 @@ function pipe2(filepath, outpath, sr_method, blur_method, varargin)
     fprintf(logFileId, strcat('-', 'blur_variance:\t', num2str(blur_var), '\n'));
     fprintf(logFileId, strcat('-', 'lambda_prior:\t', num2str(handles.opt.lambda_prior), '\n'));
 
-
     % fprintf(logFileId, strcat('varargin:', varargin))
 
-
-
-
-
-    imFileName = ['sr_out_' timestamp '.png'];
+    imFileName = [outpath '/sr_out_' timestamp '.png'];
 
     x = handles.srimage.x;
     x = reshape(x, handles.opt.M, handles.opt.N);
