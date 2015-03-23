@@ -206,7 +206,6 @@ for k=1:opt.L,
     Lambdas{k} = Lambdas_p{k};
     
 end
-
               
 xconv = 1;
 maxPSNR = 0;
@@ -216,11 +215,9 @@ maxPSNR_sx = opt.sx;
 maxPSNR_sy = opt.sy;
 maxPSNR_theta = opt.theta;
 
-disp('Overriding maxit in solvex_var.m')
-opt.maxit = 30;
 
 for i=1:opt.maxit,
-    disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...'])
+    disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...']);
     % opt.cancel = get(opt.ref_cancel,'Value');
     % if opt.cancel,
     %    break;
@@ -233,12 +230,12 @@ for i=1:opt.maxit,
     oldx = x(:);
 
     %% Estimate the image
-
     % PCG
     
     Sigma_inv = sparse(nopix,nopix);
     W = sparse([]);
     rhs = 0;
+
     for k=1:opt.L,
         
         [C,Lbl,Lbr,Ltl,Ltr,a,b]  = warp_matrix_bilinear(opt.sx(k),opt.sy(k),opt.theta(k),M,N);
@@ -273,10 +270,7 @@ for i=1:opt.maxit,
             Sigma_inv = Sigma_inv + betak(k) * Lambda(1,1)*O11 + betak(k) *Lambda(2,2)*O22 + betak(k) *Lambda(3,3)*O33 ...
                     + betak(k) *2*Lambda(1,2)*O12 + betak(k) *2*Lambda(1,3)*O13 + betak(k) *2*Lambda(2,3)*O23;
             
-        end
-        
- 
-        
+        end 
     end
     if strcmp(opt.method,'variational'),
         fprintf(opt.LogFile,'Finished calculating Sigma registration terms\n');
@@ -444,9 +438,11 @@ for i=1:opt.maxit,
     end
     
     
-    if opt.WriteImages & mod(i,10) == 0,
-        %save(sprintf('x_var%d_it%d.mat',strcmp(opt.method,'variational'), i), 'x','MSEs', 'opt');
-        imwrite(reshape(x,[opt.M,opt.N]),sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
+    if opt.WriteImages & mod(i,3) == 0,
+        disp(['Writing image' num2str(i)]);
+        xout = uint8(reshape(x, [opt.M, opt.N]));
+        % imwrite(xout,sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
+        imwrite(xout, [opt.outpath '/' opt.out_f_name '_iter_' num2str(i) '.png']);
     end
             
     if ~opt.Real, 

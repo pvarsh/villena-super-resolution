@@ -63,6 +63,7 @@ end
 maxPSNR = 0;
 
 for i=1:opt.maxit,
+    disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...']);
     % set(handles.text_Number_iteration,'String',i); 
     oldx = x;
     
@@ -132,9 +133,11 @@ for i=1:opt.maxit,
         %if ~opt.Real, figure(2), imshow(reshape(opt.xtrue,[opt.M,opt.N])); end
         %pause
     end
-    if opt.WriteImages & mod(i,10) == 0,
-        %save(sprintf('x_var%d_it%d.mat',strcmp(opt.method,'variational'), i), 'x','MSEs', 'opt');
-        imwrite(reshape(x,[opt.M,opt.N]),sprintf('x_RegErr_RSR_sigma%g_it%d.png',opt.sigma, i));
+    if opt.WriteImages & mod(i,3) == 0,
+        disp(['Writing image' num2str(i)]);
+        xout = uint8(reshape(x, [opt.M, opt.N]));
+        % imwrite(xout,sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
+        imwrite(xout, [opt.outpath '/' opt.out_f_name '_iter_' num2str(i) '.png']);
     end
     
     if opt.KeepHistory,

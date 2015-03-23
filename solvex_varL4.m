@@ -218,6 +218,7 @@ maxPSNR_theta = opt.theta;
 
 
 for i=1:opt.maxit,
+    disp(['>>>> SR iteration ', num2str(i), ' (maxit = ', num2str(opt.maxit), ')...']);
     fprintf(opt.LogFile,'\n-------------------------------------------------------------------\n');
     fprintf(opt.LogFile,'Iteration %d\n',i);
     % set(handles.text_Number_iteration,'String',i); 
@@ -440,9 +441,11 @@ for i=1:opt.maxit,
     end
     
     
-    if opt.WriteImages & mod(i,10) == 0,
-        %save(sprintf('x_var%d_it%d.mat',strcmp(opt.method,'variational'), i), 'x','MSEs', 'opt');
-        imwrite(reshape(x,[opt.M,opt.N]),sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
+    if opt.WriteImages & mod(i,3) == 0,
+        disp(['Writing image' num2str(i)]);
+        xout = uint8(reshape(x, [opt.M, opt.N]));
+        % imwrite(xout,sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
+        imwrite(xout, [opt.outpath '/' opt.out_f_name '_iter_' num2str(i) '.png']);
     end
             
     if ~opt.Real, 
