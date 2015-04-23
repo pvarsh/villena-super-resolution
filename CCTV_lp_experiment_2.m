@@ -1,5 +1,5 @@
-opt.filepath = '/home/cusp/pv629/SR/data/CCTV-robbery-youtube/extracted_sequences/license_plate'
-opt.outpath = '/home/cusp/pv629/SR/output/villena'
+opt.filepath = '/home/cusp/pv629/SR/data/CCTV-robbery-youtube/extracted_sequences/license_plate_80x80'
+opt.outpath = '/home/cusp/pv629/SR/output/villena/lp_80x80_test'
 
 %% No blur. Bicubic.
 opt.sr_method = 1;
