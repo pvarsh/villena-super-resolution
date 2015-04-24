@@ -845,7 +845,17 @@ end % End Real Mode
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
                       
         case 6 %% solvex_varTVSAR Combination
-            FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+            FILE_log = fopen(strcat(opt.outpath,
+                                    sprintf('/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt',
+                                            handles.opt.maxit,
+                                            handles.opt.PCG_maxit,
+                                            handles.opt.LK_maxit,
+                                            handles.opt.sigma,
+                                            ADDREGNOISE
+                                            )
+                                    ),
+                            'w');
+
             handles.opt.LogFile = FILE_log;
             handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
             set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
@@ -1288,8 +1298,8 @@ set(handles.text_Number_iteration, 'Visible','Off');
 set(handles.text_Niteration, 'Visible','Off');
 set(handles.pushbutton_saveSR,'Visible','off');
 set(handles.pushbutton_saveSR,'Enable','off');
- set(handles.text_Runing,'Visible','Off');
- set(handles.text_Runing,'Enable','Off');
+set(handles.text_Runing,'Visible','Off');
+set(handles.text_Runing,'Enable','Off');
 % set(handles.text_Runing,'String','Running ...');
 
 set(handles.text_NLR,'Enable','Off');
@@ -1325,13 +1335,12 @@ set(handles.uitable_estwarp,'Visible','off');
 set(handles.text_estwarp,'Visible','off');
 set(handles.popupmenu_warpresults,'Visible','off');
 
- set(handles.text_size_h_HR,'Visible','Off');
-        set(handles.edit_size_h_HR,'Visible','Off');
-        set(handles.text_varh_HR,'Visible','Off');
-        set(handles.edit_varh_HR,'Visible','Off');
-         set(handles.popupmenu_Blur_HR, 'Enable','off');
-
-        set(handles.popupmenu_Blur_HR, 'Visible','off');
+set(handles.text_size_h_HR,'Visible','Off');
+set(handles.edit_size_h_HR,'Visible','Off');
+set(handles.text_varh_HR,'Visible','Off');
+set(handles.edit_varh_HR,'Visible','Off');
+set(handles.popupmenu_Blur_HR, 'Enable','off');
+set(handles.popupmenu_Blur_HR, 'Visible','off');
 
 set(handles.LR_counter,'String','0');
 
@@ -1471,8 +1480,8 @@ if warp == 1
     
     set(handles.uitable_warp,'ColumnEditable',logical(zeros(1,length(data))));
     handle.opt.menu_warp = 1;
-      set(handles.text_NLR,'Enable','On');
-     set(handles.edit_NLR,'Enable','On');
+    set(handles.text_NLR,'Enable','On');
+    set(handles.edit_NLR,'Enable','On');
     set(handles.text_Magnification_Factor,'Enable','On');
     set(handles.edit_Magnification,'Enable','On');
     
@@ -1481,19 +1490,19 @@ if warp == 1
   
     
 elseif warp == 2
-      set(handles.text_NLR,'Enable','On');
-     set(handles.edit_NLR,'Enable','On');
+    set(handles.text_NLR,'Enable','On');
+    set(handles.edit_NLR,'Enable','On');
     set(handles.text_Magnification_Factor,'Enable','On');
     set(handles.edit_Magnification,'Enable','On');
     set(handles.uitable_warp,'Enable','On');
     set(handles.popupmenu_feat,'Enable','On');
-     set(handles.edit_NLR, 'Enable','On');
+    set(handles.edit_NLR, 'Enable','On');
     set(handles.uitable_warp,'ColumnEditable',logical(ones(1,length(data))));
     handle.opt.menu_warp = 2;
 else
-     set(handles.uitable_warp,'Enable','Off');
-     set(handles.edit_NLR, 'Enable','Off');
-     handle.opt.menu_warp = 3;
+    set(handles.uitable_warp,'Enable','Off');
+    set(handles.edit_NLR, 'Enable','Off');
+    handle.opt.menu_warp = 3;
     if handles.opt.res == 2
         handles.opt.L = 5;
         nlr=num2str(handles.opt.L);
@@ -1506,12 +1515,10 @@ else
     % opt.theta_true = [0 1 -1 2 -2]/180*pi;
         handles.opt.theta_true = [0 3 -3 5 -5]/180*pi;
         handles.opt.theta_true_grad = [0 3 -3 5 -5];
-         
-    
         
     else
         handles.opt.L=17;
-          nlr=num2str(handles.opt.L);
+        nlr=num2str(handles.opt.L);
        % set(handles.edit_NLR,'Enable','on');
         set(handles.edit_NLR,'String',nlr);
         set(handles.edit_NLR,'Enable','Off');
