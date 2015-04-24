@@ -579,7 +579,7 @@ handles.opt.LK_thr = 1e-4;
 handles.opt.PCG_minit = 20;
 handles.opt.PCG_maxit = 100;
 handles.opt.PCG_thr = 1e-10;
-handles.opt.maxit = 100;%opt.maxit = 100;
+handles.opt.maxit = 40; %opt.maxit = 100;
 handles.opt.thr = 1e-5;
 
 handles.opt.InitWithAvgImg = 1;
@@ -818,7 +818,7 @@ end % End Real Mode
             [handles.srimage.x,handles.srimage.out] = BicubicSR(handles.y,handles.opt);
             
         case 2 %% solvex_var    
-            FILE_log = fopen(sprintf('tempSR/LOG_VAR_TV_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+            FILE_log = fopen(sprintf(strcat(opt.filepath, 'LOG_VAR_TV_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             [handles.srimage.x,handles.srimage.out]= solvex_var(handles.y,handles.opt,handles.HRimage,handles);    
                    
