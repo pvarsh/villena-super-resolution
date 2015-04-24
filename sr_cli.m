@@ -476,12 +476,12 @@ function pipe2(pipe_options)
                           'solvex_varTVSAR'; ...
                           'RobustSR       '; ...
                           'Zomet          '; ...
-                          ])
+                          ]);
     blur_methods = cellstr(['no blur      '; ...
                             'average blur '; ...
                             'gaussian blur'; ...
                             'radial blur  '; ...
-                            ])
+                            ]);
 
     disp('>> Saving SR image and writing log');
     disp([outpath handles.opt.out_file_prefix '.log']);
@@ -492,8 +492,8 @@ function pipe2(pipe_options)
     fprintf(logFileId, strcat('-', 'outpath:\t', outpath, '\n'));
     fprintf(logFileId, strcat('-', 'SR filename:\t', 'sr_out_', timestamp, '.png', '\n'));
     fprintf(logFileId, strcat('-', '# images:\t', num2str(handles.opt.L), '\n'));
-    fprintf(logFileId, strcat('-', 'srmethod:\t', num2str(sr_method), sr_methods{sr_method}, '\n'));
-    fprintf(logFileId, strcat('-', 'blur:\t\t', num2str(blur_method), blur_methods{blur_method}, '\n'));
+    fprintf(logFileId, strcat('-', 'srmethod:\t', num2str(sr_method), ' ', sr_methods{sr_method}, '\n'));
+    fprintf(logFileId, strcat('-', 'blur:\t\t', num2str(blur_method), ' ', blur_methods{blur_method}, '\n'));
     if ~exist('blur_size')
         blur_size = 'None';
     end
