@@ -494,8 +494,7 @@ for i=1:opt.maxit,
     
     if opt.KeepHistory,
         history_x{i} = x;
-        history_alpha_{i} = alpha_im;
-       
+        history_alpha_{i} = alpha_im;       
         history_betak{i} = betak;
         history_theta{i} = opt.theta;
         history_sx{i} = opt.sx;
@@ -515,7 +514,6 @@ end
 
 out.betak = betak;
 out.alpha_im = alpha_im;
-
 out.Lambdas = Lambdas;
 out.xconv = xconv;
 out.theta = opt.theta;
@@ -547,12 +545,11 @@ end
 if opt.KeepHistory,
     varargout{1} = history_x;
     varargout{2} = history_alpha;
-  
     varargout{4} = history_betak;
     varargout{5} = history_theta;
     varargout{6} = history_sx;
     varargout{7} = history_sy;
     varargout{8} = history_Lambda;
-     varargout{9} = history_alpha_sar;
+    varargout{9} = history_alpha_sar;
 end
 
