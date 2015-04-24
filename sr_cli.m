@@ -183,7 +183,7 @@ function pipe2(pipe_options)
     handles.opt.PCG_minit = 20;
     handles.opt.PCG_maxit = 100;
     handles.opt.PCG_thr = 1e-10;
-    handles.opt.maxit = 100;%opt.maxit = 100;
+    handles.opt.maxit = 40;%opt.maxit = 100;
     % handles.opt.thr = 1e-5;
 
     handles.opt.InitWithAvgImg = 1;
@@ -210,7 +210,7 @@ function pipe2(pipe_options)
     handles.opt.alpha = 0.6;
     handles.opt.beta = 1/100;
     handles.opt.lambda = 0.005;
-    handles.opt.maxit = 300;
+    handles.opt.maxit = 40;
     handles.opt.InitImgExists = 0;
     handles.opt.ShowImages = 0; % was 1
     % handles.opt.WriteImages = 0;
@@ -435,7 +435,16 @@ function pipe2(pipe_options)
                       
         case 6 %% solvex_varTVSAR Combination
             disp(['>> Superresolving variational TV SAR combination with lambda ' num2str(handles.opt.lambda_prior) '...'])
-            FILE_log = fopen(sprintf('tempSR/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
+            FILE_log = fopen(strcat(opt.outpath,
+                                    sprintf('/LOG_VAR_combTVSAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt',
+                                            handles.opt.maxit,
+                                            handles.opt.PCG_maxit,
+                                            handles.opt.LK_maxit,
+                                            handles.opt.sigma,
+                                            ADDREGNOISE
+                                            )
+                                    ),
+                            'w');
             handles.opt.LogFile = FILE_log;
             % handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
             % set(handles.edit_lambda,'String',num2str(handles.opt.lambda_prior));
