@@ -834,7 +834,7 @@ end % End Real Mode
           
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
 
-        case 5 %% solvex_varL4SAR Combination            
+        case 5 %% solvex_varL4SAR Combination   (same as 4?)          
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
             handles.opt.lambda_prior = str2num(get(handles.edit_lambda,'string'));
