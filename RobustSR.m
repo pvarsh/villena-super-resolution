@@ -137,7 +137,7 @@ for i=1:opt.maxit,
         disp(['Writing image' num2str(i)]);
         xout = uint8(reshape(x, [opt.M, opt.N]));
         % imwrite(xout,sprintf('x_RegErr_var%d_sigma%g_init%d_it%d.png',strcmp(opt.method,'variational'), opt.sigma, opt.DIVIDE_U, i));
-        imwrite(xout, [opt.outpath '/' opt.out_f_name '_iter_' num2str(i) '.png']);
+        imwrite(xout, [opt.outpath '/' opt.out_file_prefix '_iter_' num2str(i) '.png']);
     end
     
     if opt.KeepHistory,
