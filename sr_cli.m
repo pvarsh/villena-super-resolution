@@ -423,7 +423,7 @@ function pipe2(pipe_options)
             % handles.opt.lambda_prior = 0; % SAR prior is seleted; with value 1 the norm l1 prior is selected
             [handles.srimage.x,handles.srimage.out]= solvex_varL4SAR(handles.y,handles.opt,handles.HRimage,handles);   
 
-        case 5 %% solvex_varL4SAR Combination 
+        case 5 %% solvex_varL4SAR Combination (same as 4?)
             disp(['>> Superresolving variational L4 SAR combination with lambda ' num2str(handles.opt.lambda_prior) '...'])         
             FILE_log = fopen(sprintf('tempSR/LOG_VAR_combL4SAR_maxit%d_PCGmaxit%d_LKmaxit%d_sigma%g_RegERR%d_exp1.txt', handles.opt.maxit, handles.opt.PCG_maxit, handles.opt.LK_maxit, handles.opt.sigma,ADDREGNOISE),'w');
             handles.opt.LogFile = FILE_log;
@@ -466,6 +466,21 @@ function pipe2(pipe_options)
             [handles.srimage.x,handles.srimage.out]= Zomet(handles.y,handles.opt,handles.HRimage,handles);          
     end % end switch
 
+    % Create list of SR and blur option codes
+    sr_methods = cellstr(['bicubic'; ...
+                          'sovlex_var'; ...
+                          'solvex_varL4'; ...
+                          'solvex_varL4SAR'; ...
+                          'solvex_varL4SAR'; ...
+                          'solvex_varTVSAR'; ...
+                          'RobustSR'; ...
+                          'Zomet'; ...
+                          ])
+    blur_methods = cellstr(['no blur'; ...
+                            'average blur'; ...
+                            'gaussian blur'; ...
+                            'radial blur'; ...
+                            ])
 
     disp('>> Saving SR image and writing log');
     disp([outpath handles.opt.out_file_prefix '.log']);
@@ -476,8 +491,8 @@ function pipe2(pipe_options)
     fprintf(logFileId, strcat('-', 'outpath:\t', outpath, '\n'));
     fprintf(logFileId, strcat('-', 'SR filename:\t', 'sr_out_', timestamp, '.png', '\n'));
     fprintf(logFileId, strcat('-', '# images:\t', num2str(handles.opt.L), '\n'));
-    fprintf(logFileId, strcat('-', 'srmethod:\t', num2str(sr_method), '\n'));
-    fprintf(logFileId, strcat('-', 'blur:\t\t', num2str(blur_method), '\n'));
+    fprintf(logFileId, strcat('-', 'srmethod:\t', num2str(sr_method), sr_methods{sr_method}, '\n'));
+    fprintf(logFileId, strcat('-', 'blur:\t\t', num2str(blur_method), blur_methods{blur_method}, '\n'));
     if ~exist('blur_size')
         blur_size = 'None';
     end
