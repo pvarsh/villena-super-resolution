@@ -1,5 +1,5 @@
 opt.filepath = '/home/cusp/pv629/SR/data/me_at_home/2'
-opt.outpath = '/home/cusp/pv629/SR/output/villena/me_at_home_exp_2'
+opt.outpath = '/home/cusp/pv629/SR/output/villena/me_at_home_exp_2_no_blur'
 
 %% No blur. Bicubic.
 opt.sr_method = 1;
