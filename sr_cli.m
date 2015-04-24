@@ -468,7 +468,7 @@ function pipe2(pipe_options)
 
 
     disp('>> Saving SR image and writing log');
-    logFileId = fopen([outpath out_file_prefix '.log'], 'w');
+    logFileId = fopen([outpath '/' out_file_prefix '.log'], 'w');
     fprintf(logFileId, 'Villena et al. Super Resolution Software. File: sr_cli.m\n');
     fprintf(logFileId, strcat('-', timestamp, '\n'));
     fprintf(logFileId, strcat('-', 'filepath:\t', filepath, '\n'));
